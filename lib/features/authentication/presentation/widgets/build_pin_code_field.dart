@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../../../../config/theme/colors.dart';
+import '../bloc/verification/verification_bloc.dart';
 
 class PinCodeFieldWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -34,9 +35,9 @@ class PinCodeFieldWidget extends StatelessWidget {
       animationDuration: const Duration(milliseconds: 300),
       backgroundColor: Colors.blue.shade50,
       enableActiveFill: true,
-      // onChanged: (value) {
-      //   context.read<VerificationBloc>().add(CodeChanged(value));
-      // },
+      onChanged: (value) {
+        context.read<VerificationBloc>().add(CodeChanged(value));
+      },
     );
   }
 }
