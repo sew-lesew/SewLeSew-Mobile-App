@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../config/theme/colors.dart';
+
 class Campaign extends StatelessWidget {
   const Campaign({super.key});
 
@@ -8,10 +10,17 @@ class Campaign extends StatelessWidget {
     return const DefaultTabController(
       length: 4, // Number of tabs
       child: Scaffold(
+        backgroundColor: AppColors.primaryBackground,
         appBar: TabBar(
           isScrollable: true,
-          indicatorColor: Colors.white,
+          indicatorColor: AppColors.accentColor,
           indicatorWeight: 3,
+          labelColor: AppColors.accentColor,
+          dividerColor: AppColors.greyColor,
+          dividerHeight: 2,
+          labelStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          unselectedLabelStyle:
+              TextStyle(fontWeight: FontWeight.normal, fontSize: 12),
           tabs: [
             Tab(text: "Create"),
             Tab(text: "My Campaigns"),
@@ -95,7 +104,7 @@ class CreateCampaignTab extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  backgroundColor: Colors.teal,
+                  backgroundColor: AppColors.accentColor,
                 ),
                 child: const Text(
                   "Create Campaign",
@@ -151,7 +160,8 @@ class MyCampaignsTab extends StatelessWidget {
                 LinearProgressIndicator(
                   value: raised / goal,
                   backgroundColor: Colors.grey.shade300,
-                  valueColor: const AlwaysStoppedAnimation(Colors.teal),
+                  valueColor:
+                      const AlwaysStoppedAnimation(AppColors.accentColor),
                 ),
                 const SizedBox(height: 5),
                 Text(
@@ -167,7 +177,7 @@ class MyCampaignsTab extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: onEdit,
-                  icon: const Icon(Icons.edit, color: Colors.teal),
+                  icon: const Icon(Icons.edit, color: AppColors.accentColor),
                   tooltip: "Edit Campaign",
                 ),
                 IconButton(
