@@ -17,8 +17,10 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final AppPages appPages = AppPages();
   MyApp({super.key});
+
+  final AppPages appPages = AppPages();
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -48,21 +50,22 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+  int _currentIndex = 0;
   final GlobalKey<CustomDrawerState> _drawerKey =
       GlobalKey<CustomDrawerState>();
-  int _currentIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 4, vsync: this); // Adjust for 4 tabs
-  }
+  late TabController _tabController;
 
   @override
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this); // Adjust for 4 tabs
   }
 
   void _onTabTapped(int index) {
@@ -121,15 +124,14 @@ class _MyHomePageState extends State<MyHomePage>
         leading = null;
     }
 
-    // Conditionally apply the CustomDrawer only on the Home tab (index 0)
     Widget pageContent = _currentIndex == 0
         ? CustomDrawer(
             key: _drawerKey,
-            // child: const Home(), // Replace with your Home screen widget
           )
-        : const Home(); // Replace with other widgets for Donate, My Campaigns, and Profile
+        : const Home();
 
     return Scaffold(
+      backgroundColor: AppColors.primaryBackground,
       appBar: AppBar(
         title: Text(appBarTitle),
         actions: appBarActions,
@@ -138,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage>
       bottomNavigationBar: ConvexAppBar(
         controller: _tabController,
         style: TabStyle.react,
-        backgroundColor: Colors.teal, // Adjust based on your theme
+        backgroundColor: AppColors.accentColor, // Adjust based on your theme
         items: [
           TabItem(icon: Image.asset('assets/icons/home.png'), title: "Home"),
           TabItem(
