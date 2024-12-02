@@ -4,12 +4,12 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppColors {
   static const Color accentColor = Color(0xFF13ADB7);
-  static const Color cardColor = Color(0xFFE5E7EB);
+  static const Color cardColor = Color(0xFFFFFFFF);
   static const Color greyColor = Color(0xFFEDEDED);
   static const Color lineColor = Color(0xFF979797);
   static const Color loadingColor = Color.fromARGB(135, 232, 227, 227);
   // Fresh and Lignt
-  static const Color primaryBackground = Color(0xFFFFFFFF);
+  static const Color primaryBackground = Color(0xFFE5E5E5);
 
   static const Color primarySecondaryText = Colors.white;
   static const Color primaryText = Color(0xFF0C0E0A);
@@ -17,7 +17,7 @@ class AppColors {
 }
 
 class LightModeColors {
-  static const Color cardColor = Color(0xFFE5E7EB);
+  static const Color cardColor = Color(0xFFFFFFFF);
   // for names and titles
   static const Color headlineLarge = Color(0xFF005782);
 

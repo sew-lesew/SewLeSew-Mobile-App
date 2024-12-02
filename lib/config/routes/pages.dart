@@ -1,12 +1,14 @@
-// The UNIFICATION Of BlocProvider and routes and pages
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:unity_fund/config/routes/names.dart';
 import 'package:unity_fund/features/authentication/presentation/bloc/reset_password/reset_password_bloc.dart';
 import 'package:unity_fund/features/authentication/presentation/bloc/toogle_password/toggle_password_bloc.dart';
+import 'package:unity_fund/features/authentication/presentation/bloc/verification/verification_bloc.dart';
 import 'package:unity_fund/features/authentication/presentation/pages/reset_screen.dart';
 import 'package:unity_fund/features/authentication/presentation/pages/sign_up.dart';
+import 'package:unity_fund/features/authentication/presentation/pages/verification_code.dart';
+import 'package:unity_fund/features/explore/presentation/pages/campaign_detail.dart';
+import 'package:unity_fund/features/user_profile/presentation/pages/FAQ.dart';
 import 'package:unity_fund/main.dart';
 
 import '../../features/authentication/data/services/local/storage_services.dart';
@@ -15,7 +17,10 @@ import '../../features/authentication/presentation/bloc/sign_up/sign_up_bloc.dar
 import '../../features/authentication/presentation/bloc/welcome/welcome_bloc.dart';
 import '../../features/authentication/presentation/pages/sign_in.dart';
 import '../../features/authentication/presentation/pages/welcome.dart';
+import '../../features/user_profile/presentation/pages/edit_profile.dart';
 import '../../injection_container.dart';
+
+// The UNIFICATION Of BlocProvider and routes and pages
 
 class AppPages {
   // final UserRepositoryImpl _userRepository;
@@ -41,15 +46,26 @@ class AppPages {
         ),
       ),
       PageEntity(
+          route: AppRoutes.CAMPAIGN_DETAIL, page: CampaignDetailScreen()),
+      PageEntity(
           route: AppRoutes.SIGN_UP,
           page: const SignUp(),
           bloc: BlocProvider(create: (_) => sl<SignUpBloc>())),
+      PageEntity(
+          route: AppRoutes.SIGN_UP_VERIFICATION,
+          page: const SignUpVerification(),
+          bloc: BlocProvider(create: (_) => sl<VerificationBloc>())),
       PageEntity(
           route: AppRoutes.RESET_PASSWORD,
           page: const ResetScreen(),
           bloc: BlocProvider(
             create: (_) => sl<ResetPasswordBloc>(),
           )),
+      PageEntity(
+        route: AppRoutes.EDIT_PROFILE,
+        page: const EditProfileScreen(),
+      ),
+      PageEntity(route: AppRoutes.FAQ, page: const FAQ()),
       PageEntity(route: AppRoutes.MAIN, page: const MyHomePage()),
     ];
   }
@@ -100,9 +116,9 @@ class AppPages {
 class HomeBloc {}
 
 class PageEntity {
-  String? route;
-  Widget? page;
-  dynamic bloc;
-
   PageEntity({this.route, this.page, this.bloc});
+
+  dynamic bloc;
+  Widget? page;
+  String? route;
 }
