@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 import '../../../../config/theme/colors.dart';
@@ -95,7 +94,7 @@ AppBar buildAppBarLarge(String type,
     centerTitle: true,
     leading: leading,
     iconTheme: const IconThemeData(color: AppColors.primaryBackground),
-    backgroundColor: AppColors.secondaryColor,
+    backgroundColor: AppColors.accentColor,
     flexibleSpace: Container(
         // decoration: const BoxDecoration(
         //   // gradient: LinearGradient(
@@ -229,7 +228,7 @@ Widget buildLogInAndRegButton(
             decoration: BoxDecoration(
                 color: isButtonEnabled == true
                     ? AppColors.accentColor
-                    : AppColors.primarySecondaryText,
+                    : AppColors.greyColor,
                 borderRadius: BorderRadius.circular(15.w),
                 border: Border.all(
                     color: isButtonEnabled == true
@@ -249,7 +248,9 @@ Widget buildLogInAndRegButton(
                 style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w300,
-                    color: AppColors.primaryBackground),
+                    color: isButtonEnabled
+                        ? AppColors.primaryBackground
+                        : AppColors.lineColor),
               ),
             )),
       ],

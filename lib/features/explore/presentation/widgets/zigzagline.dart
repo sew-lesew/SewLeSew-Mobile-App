@@ -1,54 +1,64 @@
 import 'package:flutter/material.dart';
 
-class Zigzagline extends StatelessWidget {
-  const Zigzagline(
-      {super.key, this.height = 1, this.width = 1, this.color = Colors.black});
+import '../../../../config/theme/colors.dart';
 
-  final Color color;
-  final double height;
-  final double width;
+class ZigzagLine extends StatelessWidget {
+  final double height; // Height of each zigzag wave
+  final double width; // Total width of the zigzag line
+  final Color color; // Color of the zigzag line
+
+  const ZigzagLine({
+    super.key,
+    this.height = 10.0,
+    this.width = 200.0,
+    this.color = AppColors.accentColor,
+  });
 
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      size: Size(width, height),
-      painter: ZigzagPainter(height: height, color: color),
+      size: Size(width, height), // Size of the canvas
+      painter: ZigzagPainter(
+        height: height,
+        color: color,
+      ),
     );
   }
 }
 
 class ZigzagPainter extends CustomPainter {
-  ZigzagPainter({required this.height, required this.color});
+  final double height; // Height of each zigzag wave
+  final Color color; // Color of the zigzag line
 
-  final Color color;
-  final double height;
+  ZigzagPainter({
+    required this.height,
+    required this.color,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color
-      ..strokeWidth = 1;
-    // ..style = PaintingStyle.stroke;
+      ..strokeWidth = 1.0 // Regular line thickness
+      ..style = PaintingStyle.stroke;
 
     final path = Path();
-    path.moveTo(0, 0);
-    path.lineTo(size.width, 0);
-    path.lineTo(size.width, size.height);
-    path.lineTo(0, size.height);
-    path.lineTo(0, 0);
 
-    for (var i = 0; i < size.width; i += 1) {
-      path.moveTo(i.toDouble(), 0);
-      path.lineTo(i + 1, 1);
-      path.lineTo(i + 1, 0);
+    // Start from the top-left corner
+    path.moveTo(0, 0);
+
+    // Draw the zigzag pattern
+    for (double x = 0; x <= size.width; x += height) {
+      final double y = x % (2 * height) == 0 ? height : 0;
+      path.lineTo(x, y);
     }
 
+    // Draw the zigzag path
     canvas.drawPath(path, paint);
   }
 
   @override
-  bool shouldRebuildSemantics(ZigzagPainter oldDelegate) => false;
-
-  @override
-  bool shouldRepaint(ZigzagPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false; // No need to repaint if no changes
+  }
 }

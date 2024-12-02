@@ -5,22 +5,6 @@ import '../../../../config/theme/colors.dart';
 
 // ignore: must_be_immutable
 class MyTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String hintText;
-  final bool obscureText;
-  final TextInputType keyboardType;
-  final Widget? suffixIcon;
-  final Widget? prefixIcon;
-  final VoidCallback? onTap;
-  final String? Function(String?)? validator;
-  final FocusNode? focusNode;
-  final String? errorMsg;
-  final void Function(String)? onChanged;
-  final Color textColor;
-  final Color iconColor;
-  final List<TextInputFormatter>? inputFormatters;
-  bool readOnly = false;
-
   MyTextField({
     super.key,
     this.readOnly = false,
@@ -39,6 +23,22 @@ class MyTextField extends StatelessWidget {
     this.iconColor = const Color.fromARGB(255, 209, 160, 228),
     this.inputFormatters,
   });
+
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
+  final TextEditingController controller;
+  final String? errorMsg;
+  final FocusNode? focusNode;
+  final String hintText;
+  final Color iconColor;
+  final List<TextInputFormatter>? inputFormatters;
+  final TextInputType keyboardType;
+  final bool obscureText;
+  final VoidCallback? onTap;
+  final Widget? prefixIcon;
+  bool readOnly = false;
+  final Widget? suffixIcon;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +79,7 @@ class MyTextField extends StatelessWidget {
         fillColor: AppColors.greyColor,
         filled: true,
         hintText: hintText,
-        hintStyle: const TextStyle(color: AppColors.lineColor),
+        hintStyle: Theme.of(context).textTheme.labelMedium,
         errorText: errorMsg,
       ),
     );

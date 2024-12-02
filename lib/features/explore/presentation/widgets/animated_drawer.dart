@@ -90,7 +90,7 @@ class CustomDrawerState extends State<CustomDrawer>
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.teal,
+                  AppColors.accentColor,
                   // Colors.white10,
                   Color(0xFF4A4E69), // Light purplish gray
                 ],
