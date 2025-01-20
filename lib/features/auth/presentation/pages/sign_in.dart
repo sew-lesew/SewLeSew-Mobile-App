@@ -57,7 +57,7 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor:
-          AppColors.secondaryColor, // Set status bar color for home screen
+          AppColors.accentColor, // Set status bar color for home screen
       statusBarIconBrightness: Brightness.light, // Light text/icons
     ));
     return BlocListener<SignInBloc, SignInState>(listener: (context, state) {
@@ -79,7 +79,7 @@ class _SignInState extends State<SignIn> {
       builder: (context, state) {
         return SafeArea(
           child: Scaffold(
-            backgroundColor: AppColors.primaryBackground,
+            // backgroundColor: AppColors.primaryBackground,
             appBar: buildAppBarLarge('Log In'),
             body: SingleChildScrollView(
               child: Form(
@@ -159,11 +159,9 @@ class _SignInState extends State<SignIn> {
                                   onPressed: () {},
                                   icon: const Icon(
                                       Icons.check_box_outline_blank)),
-                              const Text(
+                              Text(
                                 "Remember Password",
-                                style: TextStyle(
-                                    fontSize: 13,
-                                    color: AppColors.secondaryColor),
+                                style: Theme.of(context).textTheme.bodySmall,
                               ),
                             ],
                           ),
@@ -201,9 +199,9 @@ class _SignInState extends State<SignIn> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
+                        Text(
                           "Don't have an account?",
-                          style: TextStyle(color: AppColors.secondaryColor),
+                          style: Theme.of(context).textTheme.bodySmall,
                         ),
                         const SizedBox(
                           width: 35,

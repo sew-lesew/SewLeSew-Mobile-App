@@ -51,7 +51,7 @@ class MyTextField extends StatelessWidget {
       // onTap: onTap,
       textInputAction: TextInputAction.next,
       validator: validator,
-      style: TextStyle(color: textColor),
+      // style: TextStyle(color: textColor),
       focusNode: focusNode,
       onChanged: onChanged,
       decoration: InputDecoration(
@@ -62,21 +62,11 @@ class MyTextField extends StatelessWidget {
         prefixIcon: prefixIcon != null
             ? IconTheme(
                 data: const IconThemeData(
-                    color: AppColors.secondaryColor), // Set icon color here
+                    color: AppColors.accentColor), // Set icon color here
                 child: prefixIcon!,
               )
             : null,
         iconColor: Theme.of(context).colorScheme.primary,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Colors.transparent),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
-          borderSide:
-              BorderSide(color: Theme.of(context).colorScheme.secondary),
-        ),
-        fillColor: AppColors.greyColor,
         filled: true,
         hintText: hintText,
         hintStyle: Theme.of(context).textTheme.labelMedium,

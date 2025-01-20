@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:unity_fund/config/theme/colors.dart';
-import 'package:unity_fund/features/authentication/presentation/widgets/common_widgets.dart';
+import 'package:unity_fund/features/auth/presentation/widgets/common_widgets.dart';
 
 class CampaignDetailScreen extends StatelessWidget {
   final List<String> images = [
@@ -23,7 +23,7 @@ class CampaignDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: buildAppBarLarge("Campaign Details"),
       body: Container(
-        color: AppColors.primaryBackground,
+        // color: AppColors.primaryBackground,
         child: DefaultTabController(
           length: 2, // Number of tabs: Story and Documents
           child: Column(
@@ -90,7 +90,6 @@ class CampaignDetailScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black87,
                             ),
                           ),
                         ],
@@ -124,7 +123,6 @@ class CampaignDetailScreen extends StatelessWidget {
                             "257 Donors",
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.black87,
                             ),
                           ),
                         ],
@@ -144,7 +142,7 @@ class CampaignDetailScreen extends StatelessWidget {
                         // Add donation logic here
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
+                        // backgroundColor: Colors.orange,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),

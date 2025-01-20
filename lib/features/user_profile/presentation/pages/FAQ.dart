@@ -13,13 +13,13 @@ class FAQ extends StatelessWidget {
         title: Text("FAQs"),
       ),
       body: Container(
-        color: AppColors.primaryBackground,
+        // color: AppColors.primaryBackground,
         child: ListView(
           padding: EdgeInsets.all(16),
           children: [
             TextField(
               decoration: InputDecoration(
-                fillColor: AppColors.cardColor,
+                // fillColor: AppColors.cardColor,
                 filled: true,
                 hintText: "How can I help you?",
                 prefixIcon: Icon(Icons.search),
@@ -57,11 +57,6 @@ class FAQ extends StatelessWidget {
                   question: "Can I make a contribution anonymously?",
                   answer:
                       "Yes, you can choose to hide your name while making a contribution.",
-                ),
-                FAQItem(
-                  question: "What do I do if I don’t get the promised rewards?",
-                  answer:
-                      "Contact the fundraiser organizer directly to inquire about your rewards.",
                 ),
                 FAQItem(
                   question: "Why should I donate monthly?",

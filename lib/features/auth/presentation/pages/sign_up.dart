@@ -72,10 +72,10 @@ class _SignUpState extends State<SignUp> {
           return Form(
             key: _formKey,
             child: Container(
-              color: AppColors.primaryBackground,
+              // color: AppColors.primaryBackground,
               child: SafeArea(
                 child: Scaffold(
-                  backgroundColor: AppColors.primaryBackground,
+                  // backgroundColor: AppColors.primaryBackground,
                   appBar: buildAppBarLarge("Sign Up"),
                   body: SingleChildScrollView(
                     child: Column(

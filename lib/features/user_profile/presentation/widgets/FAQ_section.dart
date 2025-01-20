@@ -50,7 +50,7 @@ class _FAQItemWidgetState extends State<FAQItemWidget> {
     return Column(
       children: [
         Container(
-          color: AppColors.cardColor,
+          // color: AppColors.cardColor,
           child: ListTile(
             title: Text(
               widget.item.question,
@@ -68,7 +68,7 @@ class _FAQItemWidgetState extends State<FAQItemWidget> {
         ),
         if (isExpanded)
           Card(
-            color: AppColors.cardColor,
+            // color: AppColors.cardColor,
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),

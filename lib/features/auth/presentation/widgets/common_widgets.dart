@@ -93,52 +93,20 @@ AppBar buildAppBarLarge(String type,
   return AppBar(
     centerTitle: true,
     leading: leading,
-    iconTheme: const IconThemeData(color: AppColors.primaryBackground),
-    backgroundColor: AppColors.accentColor,
-    flexibleSpace: Container(
-        // decoration: const BoxDecoration(
-        //   // gradient: LinearGradient(
-        //   //   colors: [
-        //   //     AppColors.secondaryColor, // Medium Persian Blue
-        //   //     AppColors.accentColor, // Vivid Cerulean
-        //   //   ],
-        //   //   begin: Alignment.topLeft,
-        //   //   end: Alignment.bottomRight,
-        //   // ),
-        // ),
-        ),
+    // iconTheme: const IconThemeData(color: AppColors.primaryBackground),
+    flexibleSpace: Container(),
     actions: actions,
-    // systemOverlayStyle:
-    //     const SystemUiOverlayStyle(statusBarColor: AppColors.secondaryColor),
     toolbarHeight: 50.0,
-    // backgroundColor: AppColors.secondaryColor,
     elevation: 10,
-    // backgroundColor: Colors.transparent,
     bottom: PreferredSize(
       preferredSize: const Size.fromHeight(1.0),
       child: Container(
-        // decoration: const BoxDecoration(
-        //   gradient: LinearGradient(
-        //     colors: [
-        //       AppColors.secondaryColor, // Medium Persian Blue
-        //       AppColors.accentColor, // Vivid Cerulean
-        //     ],
-        //     begin: Alignment.topLeft,
-        //     end: Alignment.bottomRight,
-        //   ),
-        // ),
-        // height defines the thickness of the line
         height: 1.0,
       ),
     ),
     title: Center(
       child: Text(
         type,
-        style: TextStyle(
-          color: AppColors.primaryBackground,
-          fontSize: 16.sp,
-          fontWeight: FontWeight.normal,
-        ),
       ),
     ),
   );
@@ -153,7 +121,7 @@ Widget buildThirdPartyLogin(BuildContext context, void Function()? func) {
       width: 325.w,
       height: 50.h,
       decoration: BoxDecoration(
-        color: AppColors.secondaryColor,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(15.w),
         border: Border.all(color: AppColors.cardColor),
       ),
@@ -161,7 +129,7 @@ Widget buildThirdPartyLogin(BuildContext context, void Function()? func) {
         children: [
           Container(
             decoration: const BoxDecoration(
-                color: AppColors.primaryBackground, shape: BoxShape.circle),
+                color: Colors.white, shape: BoxShape.circle),
             child: Image.asset(
               "assets/icons/google.png",
               //color: AppColors.primaryBackground,
@@ -174,11 +142,7 @@ Widget buildThirdPartyLogin(BuildContext context, void Function()? func) {
           Center(
             child: Text(
               "Continue with Google",
-              style: TextStyle(
-                color: AppColors.primaryBackground,
-                fontWeight: FontWeight.w100,
-                fontSize: 14.sp,
-              ),
+              style: TextStyle(color: Colors.black),
             ),
           ),
         ],
@@ -192,11 +156,11 @@ Widget reusableText(String text) {
     margin: EdgeInsets.only(bottom: 5.h),
     child: Text(
       text,
-      style: TextStyle(
-        color: AppColors.secondaryColor,
-        fontWeight: FontWeight.normal,
-        fontSize: 14.sp,
-      ),
+      // style: TextStyle(
+      //   color: AppColors.secondaryColor,
+      //   fontWeight: FontWeight.normal,
+      //   fontSize: 14.sp,
+      // ),
     ),
   );
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:unity_fund/config/theme/colors.dart';
+import 'package:unity_fund/features/explore/presentation/bloc/theme_cubit.dart';
 import 'dart:math' as math;
 
 import 'package:unity_fund/features/explore/presentation/pages/home.dart';
@@ -20,6 +22,7 @@ class CustomDrawerState extends State<CustomDrawer>
   late double minSlide;
   final double minDragStartEdge = 50.0;
   late bool _canBeDragged;
+  bool isDarkMode = false;
 
   @override
   void initState() {
@@ -82,7 +85,7 @@ class CustomDrawerState extends State<CustomDrawer>
 
   Widget _buildDrawer() {
     return Material(
-      color: AppColors.primaryBackground, // Matches app background color
+      // color: AppColors.primaryBackground, // Matches app background color
       child: Row(
         children: [
           Container(
@@ -170,6 +173,7 @@ class CustomDrawerState extends State<CustomDrawer>
                         iconColor: Colors.redAccent,
                         textColor: Colors.redAccent,
                       ),
+                      _toggelDarkMode(),
                     ],
                   ),
                 ),
@@ -215,6 +219,31 @@ class CustomDrawerState extends State<CustomDrawer>
         ),
       ),
       onTap: onTap,
+    );
+  }
+
+  Widget _toggelDarkMode() {
+    return ListTile(
+      onTap: () => context.read<ThemeCubit>().toggleTheme(),
+      title: Row(
+        children: [
+          Text(
+            "Dark Mode",
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          BlocBuilder<ThemeCubit, bool>(
+            builder: (context, isDarkMode) {
+              return SizedBox(
+                height: 1,
+                child: Switch(
+                    value: isDarkMode,
+                    onChanged: (value) =>
+                        context.read<ThemeCubit>().toggleTheme()),
+              );
+            },
+          )
+        ],
+      ),
     );
   }
 

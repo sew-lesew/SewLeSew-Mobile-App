@@ -65,12 +65,8 @@ class StorageService {
     return _prefs.getString('posId');
   }
 
-  Future<String?> getCloseCaseID() async {
-    return _prefs.getString('closeCaseId');
-  }
-
-  Future<String?> getAccessToken() async {
-    return _prefs.getString('access_token').toString();
+  String? getToken() {
+    return _prefs.getString('access_token');
   }
 
   Future<String?> getRefreshToken() async {
@@ -87,6 +83,14 @@ class StorageService {
 
   Future<bool> setString(String key, String value) async {
     return await _prefs.setString(key, value);
+  }
+
+  Future<bool> setTheme(bool value) async {
+    return await _prefs.setBool('isDarkMode', value);
+  }
+
+  bool getTheme() {
+    return _prefs.getBool('isDarkMode') ?? false;
   }
 
   bool getDeviceFirstOpen() {

@@ -16,7 +16,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        // color: Colors.white,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
@@ -71,7 +71,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       children: [
         Container(
-          color: AppColors.cardColor,
+          // color: AppColors.cardColor,
           child: ListTile(
             leading: Icon(icon, color: AppColors.accentColor),
             title: Text(title),
@@ -90,7 +90,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     required String title,
   }) {
     return Container(
-      color: AppColors.cardColor,
+      // color: AppColors.cardColor,
       child: ListTile(
         leading: Icon(icon, color: AppColors.accentColor),
         title: Text(title),
@@ -170,7 +170,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryBackground,
+      // backgroundColor: AppColors.primaryBackground,
       appBar: AppBar(
         title: Text("Edit Profile"),
         leading: IconButton(
@@ -225,7 +225,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 child: Text(
                   "Save Changes",
-                  style: Theme.of(context).textTheme.labelMedium,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
             ),

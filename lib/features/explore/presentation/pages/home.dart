@@ -12,7 +12,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        color: AppColors.primaryBackground,
+        // color: AppColors.primaryBackground,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -41,45 +41,48 @@ class Home extends StatelessWidget {
 
   // Header Section
   Widget _headerSection(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.0.sp),
-      decoration: const BoxDecoration(
-        color: AppColors.accentColor,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(24),
-          bottomRight: Radius.circular(24),
+    return Card(
+      // color: AppColors.darkaccentColor,
+
+      child: Container(
+        padding: EdgeInsets.all(16.0.sp),
+        decoration: const BoxDecoration(
+          // color: AppColors.accentColor,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(24),
+            bottomRight: Radius.circular(24),
+          ),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Welcome, John!",
-              style: Theme.of(context).textTheme.headlineLarge),
-          const SizedBox(height: 8),
-          const Text(
-            "Your impact matters. Let’s make a difference today.",
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: 12,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Welcome, John!",
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _quickActionButton(
-                title: "Make Donation",
-                icon: Icons.volunteer_activism,
-                onPressed: () {},
-              ),
-              _quickActionButton(
-                title: "Create Campaign",
-                icon: Icons.campaign,
-                onPressed: () {},
-              ),
-            ],
-          ),
-        ],
+            const SizedBox(height: 8),
+            Text(
+              "Your impact matters. Let’s make a difference today.",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _quickActionButton(
+                  title: "Make Donation",
+                  icon: Icons.volunteer_activism,
+                  onPressed: () {},
+                ),
+                _quickActionButton(
+                  title: "Create Campaign",
+                  icon: Icons.campaign,
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -145,7 +148,7 @@ class Home extends StatelessWidget {
   // Featured Campaigns
   Widget _featuredCampaignsSection(BuildContext context) {
     return Container(
-      color: AppColors.primaryBackground,
+      // color: AppColors.primaryBackground,
       child: Padding(
         padding: EdgeInsets.all(8.0.h),
         child: Column(
@@ -212,8 +215,6 @@ class Home extends StatelessWidget {
     return ElevatedButton.icon(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        foregroundColor: AppColors.accentColor,
         padding: EdgeInsets.all(12.0.h),
         elevation: 2.0.h,
         shape:
@@ -233,8 +234,6 @@ class Home extends StatelessWidget {
       width: 120.0.w,
       padding: EdgeInsets.all(8.0.h),
       decoration: BoxDecoration(
-        color: AppColors.accentColor.withOpacity(0.4),
-        borderRadius: BorderRadius.circular(12.0.r),
         boxShadow: const [
           BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))
         ],
@@ -270,7 +269,7 @@ class Home extends StatelessWidget {
       child: Stack(
         children: [
           Card(
-            color: AppColors.cardColor,
+            // color: AppColors.cardColor,
             margin: EdgeInsets.symmetric(horizontal: 16.0.w, vertical: 8.0.h),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.r),
@@ -413,19 +412,16 @@ class Home extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8.r)),
                         child: ElevatedButton(
                           onPressed: () {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content: Text("Donate Now clicked!"),
-                            ));
+                            Navigator.pushNamed(context, AppRoutes.PAYMENT);
                           },
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 14,
-                            ),
-                            backgroundColor: Colors.orangeAccent,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                          ),
+                          // style: ElevatedButton.styleFrom(
+                          //   padding: const EdgeInsets.symmetric(
+                          //     vertical: 14,
+                          //   ),
+                          //   // backgroundColor: Colors.orangeAccent,
+                          //   shape: RoundedRectangleBorder(
+                          //       borderRadius: BorderRadius.circular(8)),
+                          // ),
                           child: const Text(
                             "Donate Now",
                             style:
@@ -452,10 +448,10 @@ class Home extends StatelessWidget {
                     "Donate now to support this campaign");
               },
               child: CircleAvatar(
-                backgroundColor: AppColors.cardColor,
+                // backgroundColor: AppColors.cardColor,
                 child: Icon(
                   Icons.share,
-                  color: AppColors.accentColor.withOpacity(0.5),
+                  // color: AppColors.accentColor.withOpacity(0.5),
                   size: 28,
                 ),
               ),

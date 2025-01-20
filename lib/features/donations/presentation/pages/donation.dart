@@ -9,7 +9,7 @@ class Donation extends StatelessWidget {
   // Helper method to build a previous donation tile
   Widget _buildPreviousDonationTile() {
     return Card(
-      color: AppColors.cardColor,
+      // color: AppColors.cardColor,
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
         leading: CircleAvatar(
@@ -33,7 +33,7 @@ class Donation extends StatelessWidget {
   // Helper method to build an urgent campaign card
   Widget _buildUrgentCampaignCard() {
     return Card(
-      color: AppColors.cardColor,
+      // color: AppColors.cardColor,
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       margin: const EdgeInsets.only(right: 10),
@@ -92,7 +92,7 @@ class Donation extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        color: AppColors.primaryBackground,
+        // color: AppColors.primaryBackground,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
           child: Column(

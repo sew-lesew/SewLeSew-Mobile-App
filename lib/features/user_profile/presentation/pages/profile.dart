@@ -19,7 +19,7 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryBackground,
+      // backgroundColor: AppColors.primaryBackground,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
@@ -158,7 +158,7 @@ class Profile extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(15),
       child: Card(
-        color: AppColors.cardColor,
+        // color: AppColors.cardColor,
         child: SizedBox(
           width: 125,
           height: 120,

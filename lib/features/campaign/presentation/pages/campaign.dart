@@ -10,7 +10,7 @@ class Campaign extends StatelessWidget {
     return const DefaultTabController(
       length: 4, // Number of tabs
       child: Scaffold(
-        backgroundColor: AppColors.primaryBackground,
+        // backgroundColor: AppColors.primaryBackground,
         appBar: TabBar(
           isScrollable: true,
           indicatorColor: AppColors.accentColor,
@@ -101,14 +101,14 @@ class CreateCampaignTab extends StatelessWidget {
             Center(
               child: ElevatedButton(
                 onPressed: () {}, // Add campaign creation logic
-                style: ElevatedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  backgroundColor: AppColors.accentColor,
-                ),
+                // style: ElevatedButton.styleFrom(
+                //   padding:
+                //       const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                //   backgroundColor: AppColors.accentColor,
+                // ),
                 child: const Text(
                   "Create Campaign",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  // style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
