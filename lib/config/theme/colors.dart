@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unity_fund/config/theme/appBar_theme.dart';
+import 'package:unity_fund/config/theme/bottom_navigation_theme.dart';
+import 'package:unity_fund/config/theme/bottom_sheet_theme.dart';
+import 'package:unity_fund/config/theme/card_theme.dart';
+import 'package:unity_fund/config/theme/elevated_button_theme.dart';
+import 'package:unity_fund/config/theme/text_field_theme.dart';
+import 'package:unity_fund/config/theme/text_theme.dart';
 
 class AppColors {
   static const Color accentColor = Color(0xFF13ADB7);
+  static const Color darkaccentColor = Color(0xFF212121);
+
   static const Color cardColor = Color(0xFFFFFFFF);
   static const Color greyColor = Color(0xFFEDEDED);
   static const Color lineColor = Color(0xFF979797);
@@ -82,5 +91,37 @@ class Themes {
         ),
       ),
     ),
+  );
+}
+
+class AppTheme {
+  AppTheme._();
+  static ThemeData lightTheme = ThemeData(
+    useMaterial3: true,
+    fontFamily: 'Poppins',
+    brightness: Brightness.light,
+    primaryColor: AppColors.accentColor,
+    scaffoldBackgroundColor: AppColors.primaryBackground,
+    textTheme: GoogleFonts.poppinsTextTheme(TTextTheme.lightTextTheme),
+    elevatedButtonTheme: TElevatedButtonTheme.lightElevatedButtonTheme,
+    appBarTheme: TAppBarTheme.lightAppBarTheme,
+    bottomSheetTheme: TBottomSheetTheme.lightBottomSheetTheme,
+    inputDecorationTheme: TTextFieldTheme.lightInputDecorationTheme,
+    bottomNavigationBarTheme: TBottomNavigationTheme.lightBottomNavigationTheme,
+    cardTheme: TCardTheme.lightCardTheme,
+  );
+  static ThemeData darkTheme = ThemeData(
+    useMaterial3: true,
+    fontFamily: 'Poppins',
+    brightness: Brightness.dark,
+    primaryColor: AppColors.darkaccentColor,
+    scaffoldBackgroundColor: Color(0xFF121212),
+    textTheme: GoogleFonts.poppinsTextTheme(TTextTheme.darkTextTheme),
+    elevatedButtonTheme: TElevatedButtonTheme.darkElevatedButtonTheme,
+    appBarTheme: TAppBarTheme.darkAppBarTheme,
+    bottomSheetTheme: TBottomSheetTheme.darkBottomSheetTheme,
+    inputDecorationTheme: TTextFieldTheme.darkInputDecorationTheme,
+    bottomNavigationBarTheme: TBottomNavigationTheme.darkBottomNavigationTheme,
+    cardTheme: TCardTheme.darkCardTheme,
   );
 }
