@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:regexpattern/regexpattern.dart';
 
-import '../../features/authentication/presentation/bloc/reset_password/reset_password_bloc.dart';
+import '../../features/auth/presentation/bloc/reset_password/reset_password_bloc.dart';
 
 class ResetPasswordController {
   // final TextEditingController newPasswordController = TextEditingController();

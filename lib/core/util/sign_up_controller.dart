@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:regexpattern/regexpattern.dart';
 
-import '../../features/authentication/presentation/bloc/sign_up/sign_up_bloc.dart';
+import '../../features/auth/presentation/bloc/sign_up/sign_up_bloc.dart';
 
 class SignUpController {
   final TextEditingController nameController = TextEditingController();
