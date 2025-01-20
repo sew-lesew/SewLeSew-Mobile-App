@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:unity_fund/config/routes/names.dart';
-import 'package:unity_fund/features/authentication/presentation/bloc/reset_password/reset_password_bloc.dart';
-import 'package:unity_fund/features/authentication/presentation/bloc/toogle_password/toggle_password_bloc.dart';
-import 'package:unity_fund/features/authentication/presentation/bloc/verification/verification_bloc.dart';
-import 'package:unity_fund/features/authentication/presentation/pages/reset_screen.dart';
-import 'package:unity_fund/features/authentication/presentation/pages/sign_up.dart';
-import 'package:unity_fund/features/authentication/presentation/pages/verification_code.dart';
+import 'package:unity_fund/features/auth/presentation/bloc/reset_password/reset_password_bloc.dart';
+import 'package:unity_fund/features/auth/presentation/bloc/toogle_password/toggle_password_bloc.dart';
+import 'package:unity_fund/features/auth/presentation/bloc/verification/verification_bloc.dart';
+import 'package:unity_fund/features/auth/presentation/pages/reset_screen.dart';
+import 'package:unity_fund/features/auth/presentation/pages/sign_up.dart';
+import 'package:unity_fund/features/auth/presentation/pages/verification_code.dart';
+import 'package:unity_fund/features/donations/presentation/pages/payment.dart';
 import 'package:unity_fund/features/explore/presentation/pages/campaign_detail.dart';
 import 'package:unity_fund/features/user_profile/presentation/pages/FAQ.dart';
 import 'package:unity_fund/main.dart';
 
-import '../../features/authentication/data/services/local/storage_services.dart';
-import '../../features/authentication/presentation/bloc/sign_in/sign_in_bloc.dart';
-import '../../features/authentication/presentation/bloc/sign_up/sign_up_bloc.dart';
-import '../../features/authentication/presentation/bloc/welcome/welcome_bloc.dart';
-import '../../features/authentication/presentation/pages/sign_in.dart';
-import '../../features/authentication/presentation/pages/welcome.dart';
+import '../../features/auth/data/services/local/storage_services.dart';
+import '../../features/auth/presentation/bloc/sign_in/sign_in_bloc.dart';
+import '../../features/auth/presentation/bloc/sign_up/sign_up_bloc.dart';
+import '../../features/auth/presentation/bloc/welcome/welcome_bloc.dart';
+import '../../features/auth/presentation/pages/sign_in.dart';
+import '../../features/auth/presentation/pages/welcome.dart';
 import '../../features/user_profile/presentation/pages/edit_profile.dart';
 import '../../injection_container.dart';
 
@@ -65,6 +66,7 @@ class AppPages {
         route: AppRoutes.EDIT_PROFILE,
         page: const EditProfileScreen(),
       ),
+      PageEntity(route: AppRoutes.PAYMENT, page: const DonatePayment()),
       PageEntity(route: AppRoutes.FAQ, page: const FAQ()),
       PageEntity(route: AppRoutes.MAIN, page: const MyHomePage()),
     ];

@@ -1,9 +1,10 @@
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:unity_fund/config/theme/colors.dart';
+import 'package:unity_fund/features/auth/data/services/local/storage_services.dart';
 import 'package:unity_fund/features/campaign/presentation/pages/campaign.dart';
+import 'package:unity_fund/features/explore/presentation/bloc/theme_cubit.dart';
 import 'package:unity_fund/features/user_profile/presentation/pages/profile.dart';
 import 'config/routes/pages.dart';
 import 'features/donations/presentation/pages/donation.dart';
@@ -24,16 +25,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [...appPages.allBlocProvider(context)],
+      providers: [
+        ...appPages.allBlocProvider(context),
+        BlocProvider(create: (_) => ThemeCubit())
+      ],
       child: ScreenUtilInit(
         designSize: const Size(360, 690),
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
-          return MaterialApp(
-            theme: Themes.lightTheme,
-            debugShowCheckedModeBanner: false,
-            onGenerateRoute: appPages.generateRouteSettings,
+          return BlocBuilder<ThemeCubit, bool>(
+            builder: (context, state) {
+              return MaterialApp(
+                theme: sl<StorageService>().getTheme()
+                    ? AppTheme.darkTheme
+                    : AppTheme.lightTheme,
+                debugShowCheckedModeBanner: false,
+                onGenerateRoute: appPages.generateRouteSettings,
+              );
+            },
           );
         },
       ),
@@ -83,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage>
 
     switch (_currentIndex) {
       case 0: // Home
-        appBarTitle = "Unity Fund";
+        appBarTitle = "SewLeSew Fund";
         appBarActions = [
           IconButton(
             icon: const Icon(Icons.login_rounded),
@@ -120,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage>
         leading = null;
         break;
       default:
-        appBarTitle = "Unity Fund";
+        appBarTitle = "SewLeSew Fundund";
         leading = null;
     }
 
@@ -131,40 +141,36 @@ class _MyHomePageState extends State<MyHomePage>
         : const Home();
 
     return Scaffold(
-      backgroundColor: AppColors.primaryBackground,
+      // backgroundColor: AppColors.primaryBackground,
       appBar: AppBar(
         title: Text(appBarTitle),
         actions: appBarActions,
         leading: leading, // Only provide leading for Home
       ),
-      bottomNavigationBar: ConvexAppBar(
-        controller: _tabController,
-        style: TabStyle.react,
-        backgroundColor: AppColors.accentColor, // Adjust based on your theme
-        items: [
-          TabItem(icon: Image.asset('assets/icons/home.png'), title: "Home"),
-          TabItem(
-              icon: Image.asset(
-                'assets/icons/donation.png',
-                color: AppColors.primaryBackground,
-              ),
-              title: "Donate"),
-          const TabItem(
-              icon: Icon(
-                Icons.campaign_outlined,
-                color: AppColors.greyColor,
-              ),
-              title: "Campaigns"),
-          const TabItem(
-              icon: Icon(
-                Icons.person_outline_outlined,
-                color: AppColors.greyColor,
-              ),
-              title: "Profile"),
-        ],
-        initialActiveIndex: _currentIndex,
-        onTap: _onTabTapped,
-      ),
+      bottomNavigationBar: BottomNavigationBar(
+          // backgroundColor: Theme.of(context).primaryColor,
+          currentIndex: _currentIndex,
+          onTap: _onTabTapped,
+          type: BottomNavigationBarType.fixed,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.monetization_on_outlined),
+              label: 'Donate',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.campaign_outlined),
+              label: 'Campaigns',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline_outlined),
+              label: 'Profile',
+            ),
+          ]),
+
       body: TabBarView(
         controller: _tabController,
         physics: const NeverScrollableScrollPhysics(),

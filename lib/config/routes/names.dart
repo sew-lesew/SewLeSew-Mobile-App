@@ -33,6 +33,8 @@ class AppRoutes {
 
   // home page
   static const HOME = '/home';
+  // dontate page
+  static const PAYMENT = '/payment';
 
   // application page
   static const MAIN = '/main';
