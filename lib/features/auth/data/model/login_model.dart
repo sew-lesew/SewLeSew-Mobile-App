@@ -2,11 +2,13 @@
 import 'dart:convert';
 
 class LoginModel {
-  final String email;
+  final String? email;
+  final String? phoneNumber;
   final String password;
 
   LoginModel({
-    required this.email,
+    this.phoneNumber,
+    this.email,
     required this.password,
   });
 
@@ -14,6 +16,7 @@ class LoginModel {
     return <String, dynamic>{
       'email': email,
       'password': password,
+      'phoneNumber': phoneNumber,
     };
   }
 

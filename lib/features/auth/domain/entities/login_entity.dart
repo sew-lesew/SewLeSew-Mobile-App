@@ -1,9 +1,11 @@
 class LoginEntity {
-  final String email;
+  final String? email;
+  final String? phoneNumber;
   final String password;
 
   LoginEntity({
-    required this.email,
+    this.phoneNumber,
+    this.email,
     required this.password,
   });
 }
