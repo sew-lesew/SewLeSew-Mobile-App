@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:unity_fund/config/theme/colors.dart';
+import 'package:unity_fund/features/auth/domain/entities/sign_up_entity.dart';
 
 import '../../../../core/resources/shared_event.dart';
 import '../../../../core/util/sign_up_controller.dart';
-import '../../domain/entities/user_entity.dart';
 import '../bloc/sign_up/sign_up_bloc.dart';
 import '../widgets/common_widgets.dart';
+import '../widgets/date_of_birth.dart';
 import '../widgets/sign_up_widgets.dart';
+import 'verification_code.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -40,10 +41,17 @@ class _SignUpState extends State<SignUp> {
 
   void _handleSubmit() {
     if (_formKey.currentState!.validate()) {
-      final user = User(
-          email: _signUpController.emailController.text,
-          password: _signUpController.passwordController.text,
-          confirmPassword: _signUpController.confirmPasswordController.text);
+      final contact = _signUpController.contactController.text.trim();
+      final isEmail = contact.contains('@');
+      final user = SignUpEntity(
+        firstName: _signUpController.firstNameController.text,
+        lastName: _signUpController.lastNameController.text,
+        email: isEmail ? contact : null,
+        phoneNumber: !isEmail ? contact : null,
+        password: _signUpController.passwordController.text,
+        confirmPassword: _signUpController.confirmPasswordController.text,
+        dateOfBirth: _signUpController.dateOfBirthController.text,
+      );
       _signUpBloc.add(SignUpSubmitEvent(user));
     }
   }
@@ -53,11 +61,12 @@ class _SignUpState extends State<SignUp> {
     return BlocListener<SignUpBloc, SignUpStates>(
       listener: (context, state) {
         if (state.signUpSuccess) {
-          final email = state.email;
-          // Navigate to the verification screen
-          print("Successfully Signed Up: $email");
-          Navigator.of(context)
-              .pushNamed("/sign_up_verification", arguments: email);
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => SignUpVerification(
+              phoneNumber: state.phoneNumber,
+              email: state.email,
+            ),
+          ));
         }
 
         if (state.signUpFailure != null) {
@@ -93,22 +102,78 @@ class _SignUpState extends State<SignUp> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              reusableText("Email"),
+                              reusableText("First Name"),
                               formField(
-                                  fieldName: "email",
-                                  value: state.email,
-                                  controller: _signUpController.emailController,
-                                  textType: "email",
-                                  hintText: "Enter your email address",
-                                  prefixIcon: const Icon(Icons.email),
+                                  fieldName: "firstName",
+                                  value: state.firstName,
+                                  controller:
+                                      _signUpController.firstNameController,
+                                  textType: "text",
+                                  hintText: "Enter your first name",
+                                  prefixIcon: const Icon(Icons.person),
+                                  inputType: TextInputType.name,
+                                  func: (value) {
+                                    context.read<SignUpBloc>().add(
+                                        NameChangedEvent(firstName: value));
+                                  },
+                                  formType: formType,
+                                  context: context),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              formField(
+                                  fieldName: "lastName",
+                                  value: state.lastName,
+                                  controller:
+                                      _signUpController.lastNameController,
+                                  textType: "text",
+                                  hintText: "Enter your last name",
+                                  prefixIcon: const Icon(Icons.person),
+                                  inputType: TextInputType.name,
+                                  func: (value) {
+                                    context
+                                        .read<SignUpBloc>()
+                                        .add(NameChangedEvent(lastName: value));
+                                  },
+                                  formType: formType,
+                                  context: context),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+                              reusableText("Email or Phone Number"),
+                              formField(
+                                  fieldName: "contact",
+                                  value: state.email ?? state.phoneNumber,
+                                  controller:
+                                      _signUpController.contactController,
+                                  textType: "text",
+                                  hintText: "Enter your email or phone number",
+                                  prefixIcon: const Icon(Icons.contact_mail),
                                   inputType: TextInputType.emailAddress,
                                   func: (value) {
                                     context
                                         .read<SignUpBloc>()
-                                        .add(EmailEvent(value));
+                                        .add(ContactEvent(value));
                                   },
                                   formType: formType,
                                   context: context),
+                              SizedBox(
+                                height: 20.h,
+                              ),
+
+                              reusableText("Date Of Birth"),
+
+                              // print("Date of Birth:$dateOfBirth");
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                child: dateField(
+                                  context: context,
+                                  dateController:
+                                      _signUpController.dateOfBirthController,
+                                  date: state.dateOfBirth,
+                                  dateType: "birth",
+                                ),
+                              ),
                               SizedBox(
                                 height: 20.h,
                               ),

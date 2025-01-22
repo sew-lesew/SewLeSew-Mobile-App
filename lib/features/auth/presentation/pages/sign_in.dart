@@ -40,9 +40,12 @@ class _SignInState extends State<SignIn> {
   void _handleSubmit() {
     if (_formKey.currentState!.validate()) {
       sl<StorageService>().setBool(AppConstant.STORAGE_USER_TOKEN_KEY, true);
-      // _signInBloc.add(SignInSubmitEvent(
-      //     email: _signInController.emailController.text,
-      //     password: _signInController.passwordController.text));
+      final contact = _signInController.contactController.text.trim();
+      final isEmail = contact.contains('@');
+      _signInBloc.add(SignInSubmitEvent(
+          email: isEmail ? contact : null,
+          phoneNumber: !isEmail ? contact : null,
+          password: _signInController.passwordController.text));
       Navigator.of(context).pushNamedAndRemoveUntil(
           AppRoutes.MAIN, (Route<dynamic> route) => false);
     }
@@ -118,19 +121,20 @@ class _SignInState extends State<SignIn> {
                             height: 5.h,
                           ),
                           formField(
-                            fieldName: "email",
-                            value: state.email,
-                            controller: _signInController.emailController,
-                            textType: "email",
-                            hintText: "Enter your email address",
-                            prefixIcon: const Icon(Icons.email),
-                            inputType: TextInputType.emailAddress,
-                            func: (value) {
-                              context.read<SignInBloc>().add(EmailEvent(value));
-                            },
-                            formType: 'sign in',
-                            context: context,
-                          ),
+                              fieldName: "contact",
+                              value: state.email ?? state.phoneNumber,
+                              controller: _signInController.contactController,
+                              textType: "text",
+                              hintText: "Enter your email or phone number",
+                              prefixIcon: const Icon(Icons.contact_mail),
+                              inputType: TextInputType.emailAddress,
+                              func: (value) {
+                                context
+                                    .read<SignInBloc>()
+                                    .add(ContactEvent(value));
+                              },
+                              context: context,
+                              formType: 'sign in'),
                           SizedBox(
                             height: 5.h,
                           ),
