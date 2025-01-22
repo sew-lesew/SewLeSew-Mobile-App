@@ -3,36 +3,49 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:regexpattern/regexpattern.dart';
 
 import '../../features/auth/presentation/bloc/sign_up/sign_up_bloc.dart';
+import 'ethiopian_phone_validator.dart';
 
 class SignUpController {
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController contactController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
   final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController middleNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
-  final TextEditingController clothingDescriptionController =
-      TextEditingController();
-  final TextEditingController videoLinkController = TextEditingController();
-  final TextEditingController hairColorController = TextEditingController();
-  final TextEditingController skinColorController = TextEditingController();
-  final TextEditingController heightController = TextEditingController();
-  final TextEditingController languageSpokenController =
-      TextEditingController();
-  final TextEditingController nationalityController = TextEditingController();
+  final TextEditingController dateOfBirthController = TextEditingController();
+
   String? handleEmailSignUp(
       BuildContext context, String fieldName, String value) {
     final SignUpStates state = context.read<SignUpBloc>().state;
     switch (fieldName) {
-      case 'email':
+      case 'firstName':
         if (value.isEmpty) {
-          return "Email can't be empty";
+          return "First name can not be empty";
         }
-        if (!value.isEmail()) {
-          return "Please Enter a Valid Email Address";
+        if (!value.isAlphabet()) {
+          return "Name only in letters allowed";
         }
+        break;
+
+      case 'lastName':
+        if (value.isEmpty) {
+          return "Last name can not be empty";
+        }
+        if (!value.isAlphabet()) {
+          return "Name only in letters allowed";
+        }
+        break;
+
+      case 'contact':
+        if (value.isEmpty) {
+          return "Email or phone number can't be empty";
+        }
+        if (!EthiopianPhoneValidator.isValidPhoneNumber(value) &&
+            !value.isEmail()) {
+          return "Please enter a valid phone number or email address";
+        }
+
         break;
       case 'password':
         if (value.isEmpty) {

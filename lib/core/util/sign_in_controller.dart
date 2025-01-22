@@ -2,19 +2,23 @@ import 'package:flutter/material.dart';
 
 import 'package:regexpattern/regexpattern.dart';
 
+import 'ethiopian_phone_validator.dart';
+
 class SignInController {
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController contactController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   String? handleSignIn(String fieldName, String value) {
-    print("email: ${emailController.text}");
+    print("phoneOrEmail: ${contactController.text}");
     switch (fieldName) {
-      case 'email':
+      case 'contact':
         if (value.isEmpty) {
-          return "Email can't be empty";
+          return "Email or phone number can't be empty";
         }
-        if (!value.isEmail()) {
-          return "Please Enter a Valid Email Address";
+        if (!EthiopianPhoneValidator.isValidPhoneNumber(value) &&
+            !value.isEmail()) {
+          return "Please enter a valid phone number or email address";
         }
+
         break;
       case 'password':
         if (value.isEmpty) {
