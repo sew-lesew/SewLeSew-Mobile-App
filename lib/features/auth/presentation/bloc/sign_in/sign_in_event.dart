@@ -7,9 +7,11 @@ abstract class SignInEvent extends SharedEvent {
 class SignInReset extends SignInEvent {}
 
 class SignInSubmitEvent extends SignInEvent {
-  final String email;
+  final String? email;
+  final String? phoneNumber;
   final String password;
-  const SignInSubmitEvent({required this.email, required this.password});
+  const SignInSubmitEvent(
+      {required this.email, required this.phoneNumber, required this.password});
 }
 
 class GoogleSignInEvent extends SignInEvent {}

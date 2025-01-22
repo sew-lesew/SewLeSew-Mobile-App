@@ -1,10 +1,11 @@
 part of "sign_in_bloc.dart";
 
 class SignInState {
-  final String email;
   final String password;
   final bool obscurePassword;
   final IconData iconPassword;
+  final String? email;
+  final String? phoneNumber;
   final bool isSignInLoading;
   final bool signInSuccess;
   final String? signInFailure;
@@ -20,12 +21,14 @@ class SignInState {
     this.isGoogleSignInSuccess = false,
     this.googleSignInFailure = "",
     this.email = "",
+    this.phoneNumber = "",
     this.password = "",
     this.obscurePassword = true,
     this.iconPassword = Icons.remove_red_eye_rounded,
   });
   SignInState.initial()
-      : email = "",
+      : email = null,
+        phoneNumber = null,
         password = "",
         obscurePassword = true,
         isSignInLoading = false,
@@ -38,6 +41,7 @@ class SignInState {
   SignInState copyWith(
       {String? email,
       String? password,
+      String? phoneNumber,
       bool? obscurePassword,
       IconData? iconPassword,
       bool? signInSuccess,
@@ -48,6 +52,7 @@ class SignInState {
       String? googleSignInFailure}) {
     return SignInState(
       email: email ?? this.email,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
       password: password ?? this.password,
       obscurePassword: obscurePassword ?? this.obscurePassword,
       iconPassword: iconPassword ?? this.iconPassword,
