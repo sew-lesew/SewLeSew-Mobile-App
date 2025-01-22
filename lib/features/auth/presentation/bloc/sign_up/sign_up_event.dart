@@ -5,7 +5,7 @@ abstract class SignUpEvents extends SharedEvent {
 }
 
 class SignUpSubmitEvent extends SignUpEvents {
-  final User user;
+  final SignUpEntity user;
   const SignUpSubmitEvent(this.user);
 }
 
