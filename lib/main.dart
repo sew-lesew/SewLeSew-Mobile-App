@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:unity_fund/config/theme/colors.dart';
-import 'package:unity_fund/features/auth/data/services/local/storage_services.dart';
-import 'package:unity_fund/features/campaign/presentation/pages/campaign.dart';
-import 'package:unity_fund/features/explore/presentation/bloc/theme_cubit.dart';
-import 'package:unity_fund/features/user_profile/presentation/pages/profile.dart';
+import 'package:sewlesew_fund/config/theme/colors.dart';
+import 'package:sewlesew_fund/features/auth/data/services/local/storage_services.dart';
+import 'package:sewlesew_fund/features/campaign/presentation/pages/campaign.dart';
+import 'package:sewlesew_fund/features/explore/presentation/bloc/theme_cubit.dart';
+import 'package:sewlesew_fund/features/user_profile/presentation/pages/profile.dart';
 import 'config/routes/pages.dart';
 import 'features/donations/presentation/pages/donation.dart';
 import 'features/explore/presentation/pages/home.dart';
@@ -130,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage>
         leading = null;
         break;
       default:
-        appBarTitle = "SewLeSew Fundund";
+        appBarTitle = "SewLeSew Fund";
         leading = null;
     }
 

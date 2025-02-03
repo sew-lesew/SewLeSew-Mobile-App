@@ -17,16 +17,18 @@ class CodeChanged extends VerificationEvent {
 class SubmitCode extends VerificationEvent {
   final int? code;
   final String? email;
-  const SubmitCode({this.code, this.email});
+  final String? phoneNumber;
+  const SubmitCode({this.code, this.email, this.phoneNumber});
   @override
-  List<Object> get props => [code!, email!];
+  List<Object> get props => [code!, email!, phoneNumber!];
 }
 
 class ResendCode extends VerificationEvent {
-  final String email;
-  const ResendCode(this.email);
+  final String? email;
+  final String? phoneNumber;
+  const ResendCode({this.email, this.phoneNumber});
   @override
-  List<Object> get props => [email];
+  List<Object> get props => [email!, phoneNumber!];
 }
 
 class ResetCode extends VerificationEvent {}

@@ -1,4 +1,4 @@
-import 'package:unity_fund/features/auth/domain/entities/login_entity.dart';
+import 'package:sewlesew_fund/features/auth/domain/entities/login_entity.dart';
 
 import '../model/login_model.dart';
 

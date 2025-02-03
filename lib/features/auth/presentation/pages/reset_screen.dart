@@ -38,8 +38,11 @@ class _ResetScreenState extends State<ResetScreen> {
 
   void _handleEmailSubmit() {
     if (_formKey.currentState!.validate()) {
+      final contact = _resetPasswordController.contactController.text.trim();
+      final bool isEmail = contact.contains('@');
       _resetPasswordBloc.add(SubmitResetCode(
-        email: _resetPasswordController.emailController.text,
+        email: isEmail ? contact : null,
+        phoneNumber: !isEmail ? contact : null,
       ));
     }
   }
@@ -97,15 +100,15 @@ class _ResetScreenState extends State<ResetScreen> {
                       func: (value) {
                         context
                             .read<ResetPasswordBloc>()
-                            .add(EmailEvent(value));
+                            .add(ContactEvent(value));
                       },
                       value: state.email,
-                      controller: _resetPasswordController.emailController,
+                      controller: _resetPasswordController.contactController,
                       textType: "email",
                       inputType: TextInputType.visiblePassword,
-                      hintText: "Enter your email",
-                      prefixIcon: const Icon(Icons.email),
-                      fieldName: "email",
+                      hintText: "Enter your email or phone number",
+                      prefixIcon: const Icon(Icons.contact_mail_outlined),
+                      fieldName: "contact",
                       context: context,
                     );
                   },

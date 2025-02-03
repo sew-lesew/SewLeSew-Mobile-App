@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:unity_fund/config/routes/names.dart';
-import 'package:unity_fund/config/theme/colors.dart';
-import 'package:unity_fund/features/explore/presentation/widgets/zigzagline.dart';
+import 'package:sewlesew_fund/config/routes/names.dart';
+import 'package:sewlesew_fund/config/theme/colors.dart';
+import 'package:sewlesew_fund/features/explore/presentation/widgets/zigzagline.dart';
 import 'package:share_plus/share_plus.dart';
 
 class Home extends StatelessWidget {

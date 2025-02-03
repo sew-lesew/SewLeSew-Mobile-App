@@ -65,7 +65,7 @@ class StorageService {
     return _prefs.getString('posId');
   }
 
-  String? getToken() {
+  String? getAccessToken() {
     return _prefs.getString('access_token');
   }
 

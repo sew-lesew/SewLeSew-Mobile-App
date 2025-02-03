@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:unity_fund/config/routes/routes.dart';
+import 'package:sewlesew_fund/config/routes/routes.dart';
 
 import '../../../../config/theme/colors.dart';
 import '../../../../core/constants/constant.dart';
@@ -53,7 +53,7 @@ class _SignInState extends State<SignIn> {
 
   void _handleGoogleSignIn() {
     sl<StorageService>().setBool(AppConstant.STORAGE_USER_TOKEN_KEY, true);
-    // _signInBloc.add(GoogleSignInEvent());
+    _signInBloc.add(GoogleSignInEvent());
   }
 
   @override

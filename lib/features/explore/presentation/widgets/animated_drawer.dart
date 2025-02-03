@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:unity_fund/config/theme/colors.dart';
-import 'package:unity_fund/features/explore/presentation/bloc/theme_cubit.dart';
+import 'package:sewlesew_fund/config/theme/colors.dart';
+import 'package:sewlesew_fund/core/resources/generic_state.dart';
+import 'package:sewlesew_fund/features/auth/presentation/bloc/sign_out_cubit.dart';
+import 'package:sewlesew_fund/features/explore/presentation/bloc/theme_cubit.dart';
 import 'dart:math' as math;
 
-import 'package:unity_fund/features/explore/presentation/pages/home.dart';
+import 'package:sewlesew_fund/features/explore/presentation/pages/home.dart';
+import 'package:sewlesew_fund/features/explore/presentation/widgets/show_dialog.dart';
 
 class CustomDrawer extends StatefulWidget {
   final Widget? child;
@@ -166,13 +169,18 @@ class CustomDrawerState extends State<CustomDrawer>
                       ),
                       const SizedBox(height: 20),
                       const Divider(color: Colors.white24),
-                      _buildDrawerItem(
-                        icon: Icons.logout,
-                        title: 'Logout',
-                        onTap: () {},
-                        iconColor: Colors.redAccent,
-                        textColor: Colors.redAccent,
-                      ),
+                      BlocBuilder<SignOutCubit, GenericState>(
+                          builder: (context, state) {
+                        return _buildDrawerItem(
+                          icon: Icons.logout,
+                          title: 'Logout',
+                          onTap: () {
+                            showLogoutDialog(context);
+                          },
+                          iconColor: Colors.redAccent,
+                          textColor: Colors.redAccent,
+                        );
+                      }),
                       _toggelDarkMode(),
                     ],
                   ),

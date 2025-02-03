@@ -9,7 +9,8 @@ sealed class ResetPasswordEvent extends SharedEvent {
 
 class SubmitResetCode extends ResetPasswordEvent {
   final String? email;
-  const SubmitResetCode({this.email});
+  final String? phoneNumber;
+  const SubmitResetCode({this.email, this.phoneNumber});
 }
 
 class SubmitNewPassword extends ResetPasswordEvent {

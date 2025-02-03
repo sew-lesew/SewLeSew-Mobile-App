@@ -4,23 +4,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:regexpattern/regexpattern.dart';
 
 import '../../features/auth/presentation/bloc/reset_password/reset_password_bloc.dart';
+import 'ethiopian_phone_validator.dart';
 
 class ResetPasswordController {
   // final TextEditingController newPasswordController = TextEditingController();
   // final TextEditingController confirmPasswordController =
   //     TextEditingController();
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController contactController = TextEditingController();
   // ResetPasswordController();
   // ResetSuccessful _resetSuccessful = const ResetSuccessful();
-  String? handleEmailReset(String fieldName, String value) {
+  String? handleReset(String fieldName, String value) {
     switch (fieldName) {
-      case 'email':
+      case 'contact':
         if (value.isEmpty) {
-          return "Email can't be empty";
+          return "Email or phone number can't be empty";
         }
-        if (!value.isEmail()) {
-          return "Please Enter a Valid Email Address";
+        if (!EthiopianPhoneValidator.isValidPhoneNumber(value) &&
+            !value.isEmail()) {
+          return "Please enter a valid phone number or email address";
         }
+
         break;
 
       default:

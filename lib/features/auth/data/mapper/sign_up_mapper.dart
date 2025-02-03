@@ -9,6 +9,8 @@ class SignUpMapper {
       lastName: model.lastName,
       password: model.password,
       confirmPassword: model.confirmPassword,
+      phoneNumber: model.phoneNumber,
+      dateOfBirth: model.dateOfBirth,
     );
   }
 
@@ -19,6 +21,8 @@ class SignUpMapper {
       lastName: entity.lastName,
       password: entity.password,
       confirmPassword: entity.confirmPassword,
+      phoneNumber: entity.phoneNumber,
+      dateOfBirth: entity.dateOfBirth,
     );
   }
 }

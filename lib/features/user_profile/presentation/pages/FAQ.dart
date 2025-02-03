@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../config/theme/colors.dart';
 import '../widgets/FAQ_section.dart';
 
 class FAQ extends StatelessWidget {

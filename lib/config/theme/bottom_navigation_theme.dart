@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:unity_fund/config/theme/colors.dart';
+import 'package:sewlesew_fund/config/theme/colors.dart';
 
 class TBottomNavigationTheme {
   TBottomNavigationTheme._();

@@ -9,10 +9,7 @@ abstract class SharedEvent extends Equatable {
 class NameChangedEvent extends SharedEvent {
   final String? firstName;
   final String? lastName;
-  final String? middleName;
-  final String? fullName;
-  const NameChangedEvent(
-      {this.firstName, this.middleName, this.lastName, this.fullName});
+  const NameChangedEvent({this.firstName, this.lastName});
 }
 
 class LocationEvent extends SharedEvent {
@@ -28,9 +25,9 @@ class DateEvent extends SharedEvent {
   const DateEvent({this.dateOfBirth, this.dateOfDisapperance});
 }
 
-class EmailEvent extends SharedEvent {
-  final String email;
-  const EmailEvent(this.email);
+class ContactEvent extends SharedEvent {
+  final String emailOrPhone;
+  const ContactEvent(this.emailOrPhone);
 }
 
 class PasswordEvent extends SharedEvent {

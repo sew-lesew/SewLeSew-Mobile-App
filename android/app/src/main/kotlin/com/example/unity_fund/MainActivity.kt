@@ -1,4 +1,4 @@
-package com.example.unity_fund
+package com.example.sewlesew_fund
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unity_fund/config/theme/appBar_theme.dart';
-import 'package:unity_fund/config/theme/bottom_navigation_theme.dart';
-import 'package:unity_fund/config/theme/bottom_sheet_theme.dart';
-import 'package:unity_fund/config/theme/card_theme.dart';
-import 'package:unity_fund/config/theme/elevated_button_theme.dart';
-import 'package:unity_fund/config/theme/text_field_theme.dart';
-import 'package:unity_fund/config/theme/text_theme.dart';
+import 'package:sewlesew_fund/config/theme/appBar_theme.dart';
+import 'package:sewlesew_fund/config/theme/bottom_navigation_theme.dart';
+import 'package:sewlesew_fund/config/theme/bottom_sheet_theme.dart';
+import 'package:sewlesew_fund/config/theme/card_theme.dart';
+import 'package:sewlesew_fund/config/theme/elevated_button_theme.dart';
+import 'package:sewlesew_fund/config/theme/text_field_theme.dart';
+import 'package:sewlesew_fund/config/theme/text_theme.dart';
 
 class AppColors {
   static const Color accentColor = Color(0xFF13ADB7);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:unity_fund/config/theme/colors.dart';
-import 'package:unity_fund/features/auth/presentation/widgets/common_widgets.dart';
+import 'package:sewlesew_fund/config/theme/colors.dart';
+import 'package:sewlesew_fund/features/auth/presentation/widgets/common_widgets.dart';
 
 class CampaignDetailScreen extends StatelessWidget {
   final List<String> images = [

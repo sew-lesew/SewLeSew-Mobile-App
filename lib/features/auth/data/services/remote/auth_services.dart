@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:unity_fund/core/constants/constant.dart';
-import 'package:unity_fund/features/auth/data/mapper/login_mapper.dart';
-import 'package:unity_fund/features/auth/data/mapper/sign_up_mapper.dart';
-import 'package:unity_fund/features/auth/domain/usecases/forgot_password.dart';
-
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sewlesew_fund/core/constants/constant.dart';
+import 'package:sewlesew_fund/features/auth/data/mapper/login_mapper.dart';
+import 'package:sewlesew_fund/features/auth/data/mapper/sign_up_mapper.dart';
+import 'package:sewlesew_fund/features/auth/domain/usecases/forgot_password.dart';
 import '../../../../../injection_container.dart';
 import '../../../domain/entities/login_entity.dart';
 import '../../../domain/entities/sign_up_entity.dart';
@@ -22,18 +22,19 @@ abstract class AuthServices {
   Future<void> resendCode(ResendCodeParams param);
   Future<void> resetPassword(ResetPasswordParams param);
   Future<String> refresh();
-  // Future<void> signinGoogle(); // Google Sign-In
+  Future<void> signinGoogle();
 }
 
 class AuthServicesImpl implements AuthServices {
   final storageService = sl<StorageService>();
   final Dio _dio = Dio(BaseOptions(baseUrl: AppConstant.BASE_URL));
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   AuthServicesImpl() {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           print("Request starting ...");
-          // List of paths that need headers
+
           const pathsWithHeaders = [
             '/auth/logout',
             '/auth/verify-account',
@@ -57,7 +58,6 @@ class AuthServicesImpl implements AuthServices {
           return handler.next(options);
         },
         onError: (DioException error, handler) async {
-          // Check if the error is due to an expired access token
           if (error.response?.statusCode == 401 &&
               error.requestOptions.path != "/auth/refresh") {
             // Attempt to refresh the token
@@ -140,6 +140,52 @@ class AuthServicesImpl implements AuthServices {
   }
 
   @override
+  Future<void> signinGoogle() async {
+    try {
+      // Step 1: Start Google Sign-In
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        throw Exception("Google Sign-In was canceled by the user.");
+      }
+
+      // Step 2: Retrieve Google authentication details
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final idToken = googleAuth.idToken;
+      final accessToken = googleAuth.accessToken;
+
+      if (idToken == null || accessToken == null) {
+        throw Exception("Failed to retrieve Google Sign-In tokens.");
+      }
+
+      // Step 3: Send tokens to your backend for verification or login
+      final response = await _dio.post(
+        "/auth/google/android/login",
+        data: {
+          "id_token": idToken,
+          "access_token": accessToken,
+        },
+      );
+
+      // Step 4: Store tokens from your backend response
+      final responseData = response.data;
+      if (responseData != null && responseData['access_token'] != null) {
+        await storageService.storeToken(
+          accessToken: responseData['access_token'],
+          refreshToken: responseData['refresh_token'],
+        );
+        print("Google Sign-In successful. Tokens stored securely.");
+      } else {
+        throw Exception("Failed to authenticate with the backend.");
+      }
+    } catch (e) {
+      print("Google Sign-In failed: $e");
+      throw Exception("Google Sign-In failed: $e");
+    }
+  }
+
+  @override
   Future<void> forgotPassword(ForgotPasswordParams param) async {
     try {
       final response = await _dio.post("/auth/forgot-password", data: {
@@ -173,7 +219,7 @@ class AuthServicesImpl implements AuthServices {
     print('Starting verification...');
     try {
       final response = await _dio.post(
-        "/auth/verify-email",
+        "/auth/verify-account",
         data: {
           'email': param.email,
           'verificationCode': param.code,
@@ -264,7 +310,7 @@ class AuthServicesImpl implements AuthServices {
   @override
   Future<void> resendCode(ResendCodeParams param) async {
     try {
-      final response = await _dio.post("/auth/verify-email/resend",
+      final response = await _dio.post("/auth/verify-account/resend",
           //options: Options(headers: {}),
           data: {
             'email': param.email,

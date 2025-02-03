@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:unity_fund/features/user_profile/presentation/widgets/dialog_box.dart';
+import 'package:sewlesew_fund/features/user_profile/presentation/widgets/dialog_box.dart';
 import '../../../../config/theme/colors.dart';
 
 class EditProfileScreen extends StatefulWidget {

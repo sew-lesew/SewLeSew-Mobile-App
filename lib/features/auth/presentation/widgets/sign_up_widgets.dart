@@ -60,10 +60,10 @@ String? _validator(BuildContext context, String? formType, String? value,
     case "sign in":
       return SignInController().handleSignIn(fieldName!, value!);
     case "sign up":
-      if (textType == "profile") {
-        return SignUpController()
-            .handleProfileBuild(context, fieldName!, value!);
-      }
+      // if (textType == "profile") {
+      //   return SignUpController()
+      //       .handleProfileBuild(context, fieldName!, value!);
+      // }
       return SignUpController().handleEmailSignUp(context, fieldName!, value!);
     // case "report form":
     //   if (textType == "report") {

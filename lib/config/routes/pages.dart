@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:unity_fund/config/routes/names.dart';
-import 'package:unity_fund/features/auth/presentation/bloc/reset_password/reset_password_bloc.dart';
-import 'package:unity_fund/features/auth/presentation/bloc/toogle_password/toggle_password_bloc.dart';
-import 'package:unity_fund/features/auth/presentation/bloc/verification/verification_bloc.dart';
-import 'package:unity_fund/features/auth/presentation/pages/reset_screen.dart';
-import 'package:unity_fund/features/auth/presentation/pages/sign_up.dart';
-import 'package:unity_fund/features/auth/presentation/pages/verification_code.dart';
-import 'package:unity_fund/features/donations/presentation/pages/payment.dart';
-import 'package:unity_fund/features/explore/presentation/pages/campaign_detail.dart';
-import 'package:unity_fund/features/user_profile/presentation/pages/FAQ.dart';
-import 'package:unity_fund/main.dart';
+import 'package:sewlesew_fund/config/routes/names.dart';
+import 'package:sewlesew_fund/features/auth/presentation/bloc/reset_password/reset_password_bloc.dart';
+import 'package:sewlesew_fund/features/auth/presentation/bloc/sign_out_cubit.dart';
+import 'package:sewlesew_fund/features/auth/presentation/bloc/toogle_password/toggle_password_bloc.dart';
+import 'package:sewlesew_fund/features/auth/presentation/bloc/verification/verification_bloc.dart';
+import 'package:sewlesew_fund/features/auth/presentation/pages/reset_screen.dart';
+import 'package:sewlesew_fund/features/auth/presentation/pages/sign_up.dart';
+import 'package:sewlesew_fund/features/auth/presentation/pages/verification_code.dart';
+import 'package:sewlesew_fund/features/donations/presentation/pages/payment.dart';
+import 'package:sewlesew_fund/features/explore/presentation/pages/campaign_detail.dart';
+import 'package:sewlesew_fund/features/user_profile/presentation/pages/FAQ.dart';
+import 'package:sewlesew_fund/main.dart';
 
 import '../../features/auth/data/services/local/storage_services.dart';
 import '../../features/auth/presentation/bloc/sign_in/sign_in_bloc.dart';
@@ -46,6 +47,10 @@ class AppPages {
           create: (_) => sl<SignInBloc>(),
         ),
       ),
+      PageEntity(
+          bloc: BlocProvider(
+        create: (_) => sl<SignOutCubit>(),
+      )),
       PageEntity(
           route: AppRoutes.CAMPAIGN_DETAIL, page: CampaignDetailScreen()),
       PageEntity(

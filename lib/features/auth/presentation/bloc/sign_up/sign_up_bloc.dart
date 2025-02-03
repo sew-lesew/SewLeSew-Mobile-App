@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:unity_fund/features/auth/domain/entities/sign_up_entity.dart';
-import 'package:unity_fund/features/auth/domain/usecases/signup.dart';
+import 'package:sewlesew_fund/features/auth/domain/entities/sign_up_entity.dart';
+import 'package:sewlesew_fund/features/auth/domain/usecases/signup.dart';
 import '../../../../../core/resources/shared_event.dart';
 import '../../../../../injection_container.dart';
 import '../../../domain/entities/user_entity.dart';

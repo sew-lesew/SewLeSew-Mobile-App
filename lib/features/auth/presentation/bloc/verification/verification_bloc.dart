@@ -1,5 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sewlesew_fund/features/auth/domain/usecases/refresh.dart';
+import 'package:sewlesew_fund/features/auth/domain/usecases/verify_account.dart';
+
+import '../../../../../core/util/ethiopian_phone_validator.dart';
+import '../../../../../injection_container.dart';
+import '../../../domain/usecases/resend_code.dart';
 
 part 'verification_event.dart';
 part 'verification_state.dart';
@@ -16,32 +22,38 @@ class VerificationBloc extends Bloc<VerificationEvent, VerificationState> {
     on<SubmitCode>((event, emit) async {
       emit(VerificationLoading());
       try {
-        // sl<VerifyCodeUsecase>().call(
-        //     parms: EmailVerifyReq(email: event.email!, code: event.code!));
-        print("Verification code : ${event.code}");
-        print("Verification email : ${event.email}");
+        await sl<VerifyAccountUsecase>().call(
+          params: VerifyAccountParams(
+            email: event.email,
+            code: event.code,
+            phoneNumber: EthiopianPhoneValidator.normalize(event.phoneNumber),
+          ),
+        );
 
         emit(VerificationSuccess());
       } catch (e) {
-        print(e.toString());
-        // if (e.toString().contains("401")) {
-        //   // Token expired or invalid
-        //   try {
-        //     await _repository.refreshToken();
-        //     // Retry verification after refreshing token
-        //     await _repository.verifyCode(
-        //         code: event.code!, email: event.email!);
-        //     emit(VerificationSuccess());
-        //   } catch (e) {
-        //     emit(const VerificationFailure(
-        //         "Token refresh failed. Please try again."));
-        //   }
-        // } else {
-        //   emit(VerificationFailure(e.toString()));
-        // }
+        if (e.toString().contains("401")) {
+          try {
+            await sl<RefreshUsecase>().call();
+            await sl<VerifyAccountUsecase>().call(
+              params: VerifyAccountParams(
+                email: event.email,
+                code: event.code,
+                phoneNumber:
+                    EthiopianPhoneValidator.normalize(event.phoneNumber),
+              ),
+            );
+            emit(VerificationSuccess());
+          } catch (refreshError) {
+            emit(const VerificationFailure(
+                "Token refresh failed. Please try again."));
+          }
+        } else {
+          emit(VerificationFailure(e.toString()));
+        }
       }
-      // emit(VerificationSubmitted(event.code));
     });
+
     // on<SubmitResetCode>((event, emit) async {
     //   emit(VerificationLoading());
     //   try {
@@ -55,7 +67,11 @@ class VerificationBloc extends Bloc<VerificationEvent, VerificationState> {
     on<ResendCode>((event, emit) async {
       emit(VerificationLoading());
       try {
-        // await sl<ResendCodeUsecase>().call(parms: event.email);
+        await sl<ResendCodeUsecase>().call(
+            params: ResendCodeParams(
+                email: event.email,
+                phoneNumber:
+                    EthiopianPhoneValidator.normalize(event.phoneNumber)));
         // await sl<AuthRepository>().resendCode(event.email);
         emit(VerificationCodeResent());
       } catch (e) {

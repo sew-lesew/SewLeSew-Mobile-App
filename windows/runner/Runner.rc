@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "unity_fund" "\0"
+            VALUE "FileDescription", "sewlesew_fund" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "unity_fund" "\0"
+            VALUE "InternalName", "sewlesew_fund" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "unity_fund.exe" "\0"
-            VALUE "ProductName", "unity_fund" "\0"
+            VALUE "OriginalFilename", "sewlesew_fund.exe" "\0"
+            VALUE "ProductName", "sewlesew_fund" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

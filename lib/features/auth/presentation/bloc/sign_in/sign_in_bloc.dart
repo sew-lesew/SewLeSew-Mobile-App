@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:unity_fund/features/auth/domain/usecases/login.dart';
-import 'package:unity_fund/injection_container.dart';
+import 'package:sewlesew_fund/features/auth/domain/usecases/login.dart';
+import 'package:sewlesew_fund/injection_container.dart';
 import '../../../../../core/resources/shared_event.dart';
+import '../../../../../core/util/ethiopian_phone_validator.dart';
 import '../../../domain/entities/login_entity.dart';
+import '../../../domain/usecases/google_signin.dart';
 part 'sign_in_event.dart';
 part 'sign_in_state.dart';
 
@@ -22,11 +24,10 @@ class SignInBloc extends Bloc<SharedEvent, SignInState> {
     try {
       await sl<LoginUsecase>().call(
           params: LoginEntity(
-              phoneNumber: event.phoneNumber,
+              phoneNumber: EthiopianPhoneValidator.normalize(event.phoneNumber),
               email: event.email,
               password: event.password));
 
-      // await sl<AuthRepository>().signin(event.email, event.password);
       emit(state.copyWith(
         isSignInLoading: false,
         signInSuccess: true,
@@ -44,7 +45,7 @@ class SignInBloc extends Bloc<SharedEvent, SignInState> {
       GoogleSignInEvent event, Emitter<SignInState> emit) async {
     emit(state.copyWith(isGoogleSignInLoading: true));
     try {
-      // await sl<AuthRepository>().signInWithGoogle();
+      await sl<GoogleSigninUsecase>().call();
       emit(state.copyWith(
         isGoogleSignInLoading: false,
         isGoogleSignInSuccess: true,

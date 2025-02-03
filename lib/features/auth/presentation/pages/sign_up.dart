@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import "package:flutter_screenutil/flutter_screenutil.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:unity_fund/features/auth/domain/entities/sign_up_entity.dart';
+import 'package:sewlesew_fund/features/auth/domain/entities/sign_up_entity.dart';
 
 import '../../../../core/resources/shared_event.dart';
 import '../../../../core/util/sign_up_controller.dart';
@@ -28,8 +28,6 @@ class _SignUpState extends State<SignUp> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // UserRepository repository = UserRepository();
-    // _signUpBloc = SignUpBloc(repository);
     _signUpBloc = BlocProvider.of<SignUpBloc>(context);
   }
 

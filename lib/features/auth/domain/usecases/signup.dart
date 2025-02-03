@@ -1,4 +1,4 @@
-import 'package:unity_fund/features/auth/domain/entities/sign_up_entity.dart';
+import 'package:sewlesew_fund/features/auth/domain/entities/sign_up_entity.dart';
 
 import '../../../../core/usecase/usecase.dart';
 import '../../../../injection_container.dart';
