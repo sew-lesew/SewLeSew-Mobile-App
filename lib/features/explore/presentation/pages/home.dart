@@ -1,12 +1,33 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dartz/dartz.dart' as dartz;
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sewlesew_fund/config/routes/names.dart';
 import 'package:sewlesew_fund/config/theme/colors.dart';
+import 'package:sewlesew_fund/core/resources/generic_state.dart';
+import 'package:sewlesew_fund/core/resources/success_failure.dart';
 import 'package:sewlesew_fund/features/explore/presentation/widgets/zigzagline.dart';
 import 'package:share_plus/share_plus.dart';
 
-class Home extends StatelessWidget {
+import '../../../campaign/domain/entities/campaign_entity.dart';
+import '../../../campaign/presentation/bloc/campaign_cubit.dart';
+import '../../../campaign/presentation/pages/campaign_detail.dart';
+import '../widgets/calculate_days_left.dart';
+
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<CampaignCubit>().getCampaigns();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +109,6 @@ class Home extends StatelessWidget {
   }
 
   // Categories Section
-  // Categories Section Widget
   Widget _buildCategories(BuildContext context) {
     const categories = [
       {"title": "Education", "icon": Icons.school},
@@ -160,21 +180,46 @@ class Home extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleLarge),
             ),
             SizedBox(height: 8.h),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 3, // Replace with dynamic data length
-              itemBuilder: (context, index) {
-                return _campaignCard(
-                  context,
-                  title: "Help Build a School",
-                  description:
-                      "Support the construction of schools in rural areas.",
-                  dayLeft: "21 Days Left",
-                  progress: 75,
-                  donors: ["John", "Jane", "Alex"],
-                  imageUrl: "assets/welcome/welcome1.png",
-                  onDonateNowPressed: () {},
+            BlocBuilder<CampaignCubit,
+                GenericState<dartz.Either<Failure, Success>>>(
+              builder: (context, state) {
+                if (state.isLoading!) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (state.failure != null) {
+                  return Center(
+                      child: Text("Error: ${dartz.Left(state.failure!)}"));
+                }
+
+                final data = state.data;
+                if (data == null || data.isLeft()) {
+                  return const Center(child: Text("No campaigns found."));
+                }
+
+                final campaigns = (data as dartz.Right).value;
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount:
+                      campaigns.length, // Replace with dynamic data length
+                  itemBuilder: (context, index) {
+                    final CampaignEntity campaign = campaigns[index];
+                    return _campaignCard(
+                      context,
+                      campaignId: campaign.id,
+                      goalAmount: campaign.goalAmount.toString(),
+                      raisedAmount: campaign.raisedAmount.toString(),
+                      status: campaign.status,
+                      title: campaign.title,
+                      description: campaign.description,
+                      dayLeft: "${calculateDaysLeft(campaign.deadline)} days",
+                      progress:
+                          campaign.raisedAmount / campaign.goalAmount * 100,
+                      donors: ["John", "Jane", "Alex"],
+                      imageUrl: campaign.campaignMedia[0].url,
+                      onDonateNowPressed: () {},
+                    );
+                  },
                 );
               },
             ),
@@ -254,6 +299,10 @@ class Home extends StatelessWidget {
 
   Widget _campaignCard(
     BuildContext context, {
+    required String goalAmount,
+    required String raisedAmount,
+    required String campaignId,
+    required String status,
     required String title,
     required String description,
     required String dayLeft,
@@ -264,7 +313,11 @@ class Home extends StatelessWidget {
   }) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, AppRoutes.CAMPAIGN_DETAIL);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    CampaignDetailScreen(campaignId: campaignId)));
       },
       child: Stack(
         children: [
@@ -281,11 +334,19 @@ class Home extends StatelessWidget {
                 ClipRRect(
                   borderRadius:
                       const BorderRadius.vertical(top: Radius.circular(12)),
-                  child: Image.asset(
-                    imageUrl,
-                    width: double.infinity,
-                    height: 200.h,
-                    fit: BoxFit.cover,
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                            colorFilter: ColorFilter.mode(
+                                Colors.red, BlendMode.colorBurn)),
+                      ),
+                    ),
+                    placeholder: (context, url) => CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                 ),
                 Padding(
@@ -355,9 +416,9 @@ class Home extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("10,000 birr raised",
+                              Text("$raisedAmount birr raised",
                                   style: Theme.of(context).textTheme.bodySmall),
-                              Text("190,000 birr Needed",
+                              Text("$goalAmount birr Needed",
                                   style: Theme.of(context).textTheme.bodySmall),
                             ],
                           ),
