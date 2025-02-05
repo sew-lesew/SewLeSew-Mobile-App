@@ -1,57 +1,55 @@
-import '../../../user_profile/data/model/user_model.dart';
-import '../../domain/entities/campaign_entity.dart';
+import 'campaign_media_model.dart';
 
 class CampaignModel {
-  final String? id;
-  final String userId;
+  final String id;
   final String title;
   final String description;
   final double goalAmount;
   final double raisedAmount;
-  final CampaignStatus status;
-  final DateTime? createdAt;
-
-  final UserModel? user;
-  final List<String> categories;
+  final String category;
+  final DateTime deadline;
+  final String status;
   final List<CampaignMediaModel> campaignMedia;
-  final List<CampaignDocModel> campaignDocs;
 
-  CampaignModel({
-    this.id,
-    required this.userId,
+  const CampaignModel({
+    required this.id,
     required this.title,
     required this.description,
     required this.goalAmount,
     required this.raisedAmount,
+    required this.category,
+    required this.deadline,
     required this.status,
-    this.createdAt,
-    this.user,
-    required this.categories,
     required this.campaignMedia,
-    required this.campaignDocs,
   });
-}
 
-class CampaignMediaModel {
-  final String id;
-  final String campaignId;
-  final String url;
+  factory CampaignModel.fromJson(Map<String, dynamic> json) {
+    return CampaignModel(
+      id: json['id'],
+      title: json['title'],
+      description: json['description'],
+      goalAmount: double.parse(json['goalAmount']),
+      raisedAmount: double.parse(json['raisedAmount']),
+      category: json['category'],
+      deadline: DateTime.parse(json['deadline']),
+      status: json['status'],
+      campaignMedia: (json['campaignMedia'] as List)
+          .map((e) => CampaignMediaModel.fromJson(e))
+          .toList(),
+    );
+  }
 
-  CampaignMediaModel({
-    required this.id,
-    required this.campaignId,
-    required this.url,
-  });
-}
-
-class CampaignDocModel {
-  final String id;
-  final String campaignId;
-  final String url;
-
-  CampaignDocModel({
-    required this.id,
-    required this.campaignId,
-    required this.url,
-  });
+  // Map<String, dynamic> toJson() {
+  //   return {
+  //     'id': id,
+  //     'title': title,
+  //     'description': description,
+  //     'goalAmount': goalAmount.toString(),
+  //     'raisedAmount': raisedAmount.toString(),
+  //     'category': category,
+  //     'deadline': deadline.toIso8601String(),
+  //     'status': status,
+  //     'campaignMedia': campaignMedia.map((e) => (e).toJson()).toList(),
+  //   };
+  // }
 }
