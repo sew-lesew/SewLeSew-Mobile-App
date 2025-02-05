@@ -52,11 +52,11 @@ class _SignUpVerificationState extends State<SignUpVerification> {
                 margin: const EdgeInsets.all(8.0),
                 child: BlocBuilder<VerificationBloc, VerificationState>(
                   builder: (context, state) {
-                    if (state is VerificationFailure) {
-                      return Center(
-                          child: Text('Error: ${state.error}',
-                              style: const TextStyle(color: Colors.red)));
-                    }
+                    // if (state is VerificationFailure) {
+                    //   return Center(
+                    //       child: Text('Error: ${state.error}',
+                    //           style: const TextStyle(color: Colors.red)));
+                    // }
                     if (state is VerificationSuccess) {
                       // Navigate to the next page after successful verification
                       WidgetsBinding.instance.addPostFrameCallback((_) {
