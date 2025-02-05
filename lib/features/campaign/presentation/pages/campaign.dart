@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../config/theme/colors.dart';
+import 'my_campaigns_tab.dart';
 
 class Campaign extends StatelessWidget {
   const Campaign({super.key});
@@ -114,101 +115,6 @@ class CreateCampaignTab extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class MyCampaignsTab extends StatelessWidget {
-  const MyCampaignsTab({super.key});
-
-  Widget _buildCampaignCard({
-    required String title,
-    required String status,
-    required int raised,
-    required int goal,
-    required VoidCallback onEdit,
-    required VoidCallback onDelete,
-  }) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16.0),
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Campaign Title
-            Text(
-              title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 5),
-            // Status
-            Text(
-              "Status: $status",
-              style: const TextStyle(fontSize: 14, color: Colors.grey),
-            ),
-            const SizedBox(height: 10),
-            // Progress Bar
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text("Progress", style: TextStyle(fontSize: 14)),
-                const SizedBox(height: 5),
-                LinearProgressIndicator(
-                  value: raised / goal,
-                  backgroundColor: Colors.grey.shade300,
-                  valueColor:
-                      const AlwaysStoppedAnimation(AppColors.accentColor),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  "Raised: $raised Birr / $goal Birr",
-                  style: const TextStyle(fontSize: 14, color: Colors.grey),
-                ),
-              ],
-            ),
-            const SizedBox(height: 15),
-            // Edit and Delete Buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  onPressed: onEdit,
-                  icon: const Icon(Icons.edit, color: AppColors.accentColor),
-                  tooltip: "Edit Campaign",
-                ),
-                IconButton(
-                  onPressed: onDelete,
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  tooltip: "Delete Campaign",
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      itemCount: 5, // Example campaigns
-      itemBuilder: (context, index) => _buildCampaignCard(
-        title: "Education for All",
-        status: "Active",
-        raised: 5000,
-        goal: 10000,
-        onEdit: () {
-          // Add edit functionality
-        },
-        onDelete: () {
-          // Add delete functionality
-        },
       ),
     );
   }
