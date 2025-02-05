@@ -3,6 +3,7 @@ import 'package:sewlesew_fund/features/auth/domain/entities/sign_up_entity.dart'
 import 'package:sewlesew_fund/features/auth/domain/repositroy/auth_repository.dart';
 import 'package:sewlesew_fund/injection_container.dart';
 
+import '../../../../core/services/token_services.dart';
 import '../../domain/usecases/forgot_password.dart';
 import '../../domain/usecases/resend_code.dart';
 import '../../domain/usecases/reset_passord.dart';
@@ -33,7 +34,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> refresh() async {
-    await _authServices.refresh();
+    await sl<TokenService>().refreshToken();
   }
 
   @override
