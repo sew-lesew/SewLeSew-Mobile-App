@@ -8,8 +8,9 @@ import 'package:sewlesew_fund/features/auth/presentation/bloc/verification/verif
 import 'package:sewlesew_fund/features/auth/presentation/pages/reset_screen.dart';
 import 'package:sewlesew_fund/features/auth/presentation/pages/sign_up.dart';
 import 'package:sewlesew_fund/features/auth/presentation/pages/verification_code.dart';
+import 'package:sewlesew_fund/features/campaign/presentation/bloc/campaign_cubit.dart';
 import 'package:sewlesew_fund/features/donations/presentation/pages/payment.dart';
-import 'package:sewlesew_fund/features/explore/presentation/pages/campaign_detail.dart';
+import 'package:sewlesew_fund/features/campaign/presentation/pages/campaign_detail.dart';
 import 'package:sewlesew_fund/features/user_profile/presentation/pages/FAQ.dart';
 import 'package:sewlesew_fund/main.dart';
 
@@ -52,7 +53,11 @@ class AppPages {
         create: (_) => sl<SignOutCubit>(),
       )),
       PageEntity(
-          route: AppRoutes.CAMPAIGN_DETAIL, page: CampaignDetailScreen()),
+          route: AppRoutes.CAMPAIGN_DETAIL,
+          page: CampaignDetailScreen(),
+          bloc: BlocProvider(
+            create: (_) => sl<CampaignCubit>(),
+          )),
       PageEntity(
           route: AppRoutes.SIGN_UP,
           page: const SignUp(),
