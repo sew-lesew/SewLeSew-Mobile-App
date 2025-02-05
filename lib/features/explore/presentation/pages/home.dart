@@ -33,7 +33,6 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        // color: AppColors.primaryBackground,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -197,6 +196,7 @@ class _HomeState extends State<Home> {
                 }
 
                 final campaigns = (data as dartz.Right).value;
+                print(campaigns);
                 return ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
