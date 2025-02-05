@@ -13,13 +13,22 @@ import 'package:sewlesew_fund/features/auth/domain/usecases/verify_account.dart'
 import 'package:sewlesew_fund/features/auth/presentation/bloc/reset_password/reset_password_bloc.dart';
 import 'package:sewlesew_fund/features/auth/presentation/bloc/sign_up/sign_up_bloc.dart';
 import 'package:sewlesew_fund/features/auth/presentation/bloc/verification/verification_bloc.dart';
+import 'package:sewlesew_fund/features/campaign/domain/repository/campaign_repository.dart';
+import 'package:sewlesew_fund/features/campaign/presentation/bloc/campaign_cubit.dart';
 
+import 'core/services/token_services.dart';
 import 'features/auth/data/repository/auth_repository_impl.dart';
 import 'features/auth/data/services/local/storage_services.dart';
 import 'features/auth/data/services/remote/auth_services.dart';
 import 'features/auth/domain/repositroy/auth_repository.dart';
 import 'features/auth/presentation/bloc/sign_in/sign_in_bloc.dart';
 import 'features/auth/presentation/bloc/sign_out_cubit.dart';
+import 'features/campaign/data/repository/campaign_repository_impl.dart';
+import 'features/campaign/data/services/remote/campaign_services.dart';
+import 'features/campaign/domain/usecases/create_business_campaign.dart';
+import 'features/campaign/domain/usecases/get_campaign_by_id.dart';
+import 'features/campaign/domain/usecases/get_campaigns.dart';
+import 'features/campaign/domain/usecases/get_my_campaigns.dart';
 
 final GetIt sl = GetIt.instance;
 Future<void> initializeDependencies() async {
@@ -29,8 +38,12 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton(dotenv.load);
 // repository
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl());
+  sl.registerLazySingleton<CampaignRepository>(() => CampaignRepositoryImpl());
+
   //services
   sl.registerLazySingleton<AuthServices>(() => AuthServicesImpl());
+  sl.registerLazySingleton<TokenService>(() => TokenService());
+  sl.registerLazySingleton<CampaignServices>(() => CampaignServices());
 //Usecases
   //Auth Usecases
   sl.registerSingleton<LoginUsecase>(LoginUsecase());
@@ -41,10 +54,19 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<RefreshUsecase>(RefreshUsecase());
   sl.registerSingleton<VerifyAccountUsecase>(VerifyAccountUsecase());
   sl.registerSingleton<ResendCodeUsecase>(ResendCodeUsecase());
+
+  //Campaign Usecases
+  sl.registerSingleton<GetMyCampaignsUsecase>(GetMyCampaignsUsecase());
+  sl.registerSingleton<GetCampaignsUsecase>(GetCampaignsUsecase());
+  sl.registerSingleton<GetCampaignByIdUsecase>(GetCampaignByIdUsecase());
+  sl.registerSingleton<CreateBusinessCampaignUsecase>(
+      CreateBusinessCampaignUsecase());
+
   // Blocs
   sl.registerFactory<SignInBloc>(() => SignInBloc());
   sl.registerFactory<SignUpBloc>(() => SignUpBloc());
   sl.registerFactory<VerificationBloc>(() => VerificationBloc());
   sl.registerFactory<ResetPasswordBloc>(() => ResetPasswordBloc());
   sl.registerFactory<SignOutCubit>(() => SignOutCubit());
+  sl.registerFactory<CampaignCubit>(() => CampaignCubit());
 }
