@@ -43,10 +43,14 @@ class CampaignRepositoryImpl implements CampaignRepository {
     try {
       final response = await sl<CampaignServices>().getCampaignById(id);
       final data = response.data['data'];
+      // debugging
+      print("campaign detail data is $data");
       final CampaignDetailModel campaignDetailModel =
           CampaignDetailModel.fromJson(data);
+      print(" campaign detail model is $campaignDetailModel");
       final CampaignDetailEntity campaignDetailEntity =
           CampaignDetailMapper.toEntity(campaignDetailModel);
+      print("campaign detail entity is $campaignDetailEntity");
       if (response.statusCode == 200) {
         return Right(Success(
             message: response.data['message'],
@@ -92,10 +96,11 @@ class CampaignRepositoryImpl implements CampaignRepository {
   @override
   Future<Either<Failure, Success>> getMyCampaigns() async {
     try {
+      print("Starting getting my campaigns");
       final response = await sl<CampaignServices>().getMyCampaign();
-      print(response);
-      final data = response.data['message'];
-      print(data);
+      print("response is $response");
+      final data = response.data['data'];
+      print("my campaigns are $data");
       final List<CampaignModel> myCampaignModels = data
           .map<CampaignModel>((campaign) => CampaignModel.fromJson(campaign))
           .toList();
