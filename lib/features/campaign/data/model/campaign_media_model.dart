@@ -14,11 +14,13 @@ class CampaignMediaModel {
   });
   factory CampaignMediaModel.fromJson(Map<String, dynamic> json) {
     return CampaignMediaModel(
-      id: json['id'],
-      // campaignId: json['campaignId'] ?? '',
-      url: json['url'],
-      // imageType: json['imageType'] ?? '',
-      // createdAt: DateTime.parse(json['createdAt']) ?? DateTime.now(),
+      id: json['id'] as String, // Ensure this is non-null
+      campaignId: json['campaignId'] as String?, // Nullable
+      url: json['url'] as String, // Ensure this is non-null
+      imageType: json['imageType'] as String?, // Nullable
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'] as String)
+          : null, // Nullable
     );
   }
 }
