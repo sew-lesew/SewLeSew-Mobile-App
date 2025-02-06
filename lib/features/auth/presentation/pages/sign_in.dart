@@ -24,36 +24,41 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
   final SignInController _signInController = SignInController();
-  late SignInBloc _signInBloc;
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _signInBloc = BlocProvider.of<SignInBloc>(context);
-  }
 
   @override
   void dispose() {
-    _signInBloc.add(SignInReset());
+    context.read<SignInBloc>().add(SignInReset());
     super.dispose();
   }
 
   void _handleSubmit() {
-    if (_formKey.currentState!.validate()) {
-      sl<StorageService>().setBool(AppConstant.STORAGE_USER_TOKEN_KEY, true);
-      final contact = _signInController.contactController.text.trim();
-      final isEmail = contact.contains('@');
-      _signInBloc.add(SignInSubmitEvent(
-          email: isEmail ? contact : null,
-          phoneNumber: !isEmail ? contact : null,
-          password: _signInController.passwordController.text));
-      Navigator.of(context).pushNamedAndRemoveUntil(
-          AppRoutes.MAIN, (Route<dynamic> route) => false);
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    final contact = _signInController.contactController.text.trim();
+    final password = _signInController.passwordController.text.trim();
+
+    if (contact.isEmpty || password.isEmpty) {
+      return;
+    }
+
+    final isEmail = contact.contains('@');
+
+    try {
+      context.read<SignInBloc>().add(SignInSubmitEvent(
+            email: isEmail ? contact : null,
+            phoneNumber: isEmail ? null : contact,
+            password: password,
+          ));
+    } catch (e) {
+      print("Error dispatching SignInSubmitEvent: $e");
     }
   }
 
   void _handleGoogleSignIn() {
     sl<StorageService>().setBool(AppConstant.STORAGE_USER_TOKEN_KEY, true);
-    _signInBloc.add(GoogleSignInEvent());
+    context.read<SignInBloc>().add(GoogleSignInEvent());
   }
 
   @override
@@ -71,13 +76,12 @@ class _SignInState extends State<SignIn> {
         Navigator.of(context).pushNamedAndRemoveUntil(
             AppRoutes.MAIN, (Route<dynamic> route) => false);
       }
-      if (state.signInFailure != null || state.googleSignInFailure != null) {
-        // print("Sign In Failure: $state.signInFailure");
-        print("Failed to Signed In");
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text(state.signInFailure!)),
-        // );
-      }
+      // if (state.signInFailure != null || state.googleSignInFailure != null) {
+      //   print("Failed to Signed In");
+      //   // ScaffoldMessenger.of(context).showSnackBar(
+      //   //   SnackBar(content: Text(state.signInFailure!)),
+      //   // );
+      // }
     }, child: BlocBuilder<SignInBloc, SignInState>(
       builder: (context, state) {
         return SafeArea(
