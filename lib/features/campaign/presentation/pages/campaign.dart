@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../config/theme/colors.dart';
+import 'create_campaign_tab.dart';
 import 'my_campaigns_tab.dart';
 
 class Campaign extends StatelessWidget {
@@ -35,84 +36,6 @@ class Campaign extends StatelessWidget {
             MyCampaignsTab(),
             PendingCampaignsTab(),
             DeletedCampaignsTab(),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CreateCampaignTab extends StatelessWidget {
-  const CreateCampaignTab({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Create a New Campaign",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            // Campaign Title
-            TextFormField(
-              decoration: const InputDecoration(
-                labelText: "Campaign Title",
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.title),
-              ),
-            ),
-            const SizedBox(height: 15),
-            // Campaign Description
-            TextFormField(
-              maxLines: 4,
-              decoration: const InputDecoration(
-                labelText: "Campaign Description",
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.description),
-              ),
-            ),
-            const SizedBox(height: 15),
-            // Campaign Goal
-            TextFormField(
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: "Goal Amount (Birr)",
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.money),
-              ),
-            ),
-            const SizedBox(height: 15),
-            // Upload Image Button
-            Row(
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () {}, // Add image upload functionality
-                  icon: const Icon(Icons.image),
-                  label: const Text("Upload Campaign Image"),
-                ),
-              ],
-            ),
-            const SizedBox(height: 30),
-            // Submit Button
-            Center(
-              child: ElevatedButton(
-                onPressed: () {}, // Add campaign creation logic
-                // style: ElevatedButton.styleFrom(
-                //   padding:
-                //       const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                //   backgroundColor: AppColors.accentColor,
-                // ),
-                child: const Text(
-                  "Create Campaign",
-                  // style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
           ],
         ),
       ),
