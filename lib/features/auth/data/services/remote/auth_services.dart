@@ -4,7 +4,6 @@ import 'package:sewlesew_fund/core/constants/constant.dart';
 import 'package:sewlesew_fund/features/auth/data/mapper/login_mapper.dart';
 import 'package:sewlesew_fund/features/auth/data/mapper/sign_up_mapper.dart';
 import 'package:sewlesew_fund/features/auth/domain/usecases/forgot_password.dart';
-import '../../../../../core/services/token_services.dart';
 import '../../../../../injection_container.dart';
 import '../../../domain/entities/login_entity.dart';
 import '../../../domain/entities/sign_up_entity.dart';
@@ -22,13 +21,12 @@ abstract class AuthServices {
   Future<void> verifyAccount(VerifyAccountParams param);
   Future<void> resendCode(ResendCodeParams param);
   Future<void> resetPassword(ResetPasswordParams param);
-  // Future<String> refresh();
+  Future<String> refresh();
   Future<void> signinGoogle();
 }
 
 class AuthServicesImpl implements AuthServices {
   final storageService = sl<StorageService>();
-  final tokenService = sl<TokenService>();
   final Dio _dio = Dio(BaseOptions(baseUrl: AppConstant.BASE_URL));
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   AuthServicesImpl() {
@@ -64,7 +62,7 @@ class AuthServicesImpl implements AuthServices {
               error.requestOptions.path != "/auth/refresh") {
             // Attempt to refresh the token
             try {
-              final newAccessToken = await tokenService.refreshToken();
+              final newAccessToken = await refresh();
               // Update the header with the new access token
               error.requestOptions.headers['Authorization'] =
                   'Bearer $newAccessToken';
@@ -242,32 +240,32 @@ class AuthServicesImpl implements AuthServices {
     }
   }
 
-  // @override
-  // Future<String> refresh() async {
-  //   // storageService.clearTokens();
-  //   final refreshToken = await storageService.getRefreshToken();
-  //   if (refreshToken == null) {
-  //     throw Exception("No refresh token available");
-  //   }
-  //   try {
-  //     final response = await _dio.post(
-  //       "/auth/refresh",
-  //       data: {
-  //         'refresh_token': refreshToken,
-  //       },
-  //     );
+  @override
+  Future<String> refresh() async {
+    // storageService.clearTokens();
+    final refreshToken = await storageService.getRefreshToken();
+    if (refreshToken == null) {
+      throw Exception("No refresh token available");
+    }
+    try {
+      final response = await _dio.post(
+        "/auth/refresh",
+        data: {
+          'refresh_token': refreshToken,
+        },
+      );
 
-  //     final data = response.data;
-  //     await storageService.storeToken(
-  //         accessToken: data['access_token'],
-  //         refreshToken: data['refresh_token']);
-  //     final getAccessToken = storageService.getAccessToken();
-  //     return getAccessToken!;
-  //   } catch (e) {
-  //     print(e);
-  //     throw Exception("Failed to refresh token: ${e.toString()}");
-  //   }
-  // }
+      final data = response.data;
+      await storageService.storeToken(
+          accessToken: data['access_token'],
+          refreshToken: data['refresh_token']);
+      final getAccessToken = storageService.getAccessToken();
+      return getAccessToken!;
+    } catch (e) {
+      print(e);
+      throw Exception("Failed to refresh token: ${e.toString()}");
+    }
+  }
 
   @override
   Future<void> resetPassword(ResetPasswordParams param) async {
