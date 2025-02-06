@@ -2,33 +2,33 @@
 import 'dart:io';
 
 class BusinessCampaignEntity {
-  final String fullName;
-  final String? publicEmail;
-  final String? publicPhoneNumber;
-  final String contactEmail;
-  final String contactPhoneNumber;
-  final String region;
-  final String city;
-  final String? relativeLocation;
-  final String title;
-  final double goalAmount;
-  final double? raisedAmount;
-  final String description;
-  final String deadline;
-  final String? website;
-  final String bankName;
-  final String holderName;
-  final String accountNumber;
-  final String sector;
-  final String tinNumber;
-  final String licenseNumber;
-  final String category;
-  final File? tinCertificate;
-  final File? registrationLicense;
-  final List<File>? supportingDocuments;
-  final File? logo;
-  final File? coverImage;
-  final List<File>? otherImages;
+  String fullName;
+  String? publicEmail;
+  String? publicPhoneNumber;
+  String contactEmail;
+  String contactPhoneNumber;
+  String region;
+  String city;
+  String? relativeLocation;
+  String title;
+  double goalAmount;
+  double? raisedAmount;
+  String description;
+  String deadline;
+  String? website;
+  String bankName;
+  String holderName;
+  String accountNumber;
+  String sector;
+  String tinNumber;
+  String licenseNumber;
+  String category;
+  File? tinCertificate;
+  File? registrationLicense;
+  List<File>? supportingDocuments;
+  File? logo;
+  File? coverImage;
+  List<File>? otherImages;
 
   BusinessCampaignEntity({
     required this.fullName,
