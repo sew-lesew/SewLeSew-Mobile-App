@@ -1,12 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart' as dartz;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sewlesew_fund/core/resources/success_failure.dart';
 
 import 'package:sewlesew_fund/core/resources/generic_state.dart';
 import 'package:sewlesew_fund/features/campaign/presentation/pages/campaign_detail.dart';
+import '../../../explore/presentation/widgets/campaign_card_shimmer.dart';
 import '../../domain/entities/campaign_entity.dart';
 import '../bloc/campaign_cubit.dart';
+import '../widgets/my_campaign_card_skeleton.dart';
 
 class MyCampaignsTab extends StatefulWidget {
   const MyCampaignsTab({super.key});
@@ -28,12 +32,12 @@ class _MyCampaignsTabState extends State<MyCampaignsTab> {
         GenericState<dartz.Either<Failure, Success>>>(
       builder: (context, state) {
         if (state.isLoading!) {
-          return const Center(child: CircularProgressIndicator());
+          return myCampaignCardSkeleton(context);
         }
 
-        if (state.failure != null) {
-          return Center(child: Text(state.failure!));
-        }
+        // if (state.failure != null) {
+        //   return Center(child: Text(state.failure!));
+        // }
 
         final data = state.data;
         if (data == null || data.isLeft()) {
@@ -55,6 +59,7 @@ class _MyCampaignsTabState extends State<MyCampaignsTab> {
                       builder: (context) =>
                           CampaignDetailScreen(campaignId: campaign.id))),
               child: _buildCampaignCard(
+                imageUrl: campaign.campaignMedia[0].url,
                 title: campaign.title,
                 status: campaign.status,
                 raised: campaign.raisedAmount,
@@ -76,6 +81,7 @@ class _MyCampaignsTabState extends State<MyCampaignsTab> {
   Widget _buildCampaignCard({
     required String title,
     required String status,
+    required String imageUrl,
     required double raised,
     required double goal,
     required VoidCallback onEdit,
@@ -91,6 +97,11 @@ class _MyCampaignsTabState extends State<MyCampaignsTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Image(
+                  image: CachedNetworkImageProvider(imageUrl),
+                  width: double.infinity,
+                  height: 200.h,
+                  fit: BoxFit.cover),
               Text(title,
                   style: const TextStyle(
                       fontSize: 18, fontWeight: FontWeight.bold)),
