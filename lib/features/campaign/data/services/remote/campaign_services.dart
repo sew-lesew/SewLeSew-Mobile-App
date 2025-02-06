@@ -30,15 +30,15 @@ class CampaignServices {
           return handler.next(options);
         },
         onError: (DioException error, handler) async {
+          print("Error occurred: ${error.message}");
           if (error.response?.statusCode == 401 &&
               error.requestOptions.path != "/auth/refresh") {
-            // Attempt to refresh the token
+            print("Attempting to refresh token...");
             try {
               final newAccessToken = await tokenService.refreshToken();
-              // Update the header with the new access token
+              print("New access token: $newAccessToken");
               error.requestOptions.headers['Authorization'] =
                   'Bearer $newAccessToken';
-              // Retry the failed request with the new access token
               final response = await _dio.request(
                 error.requestOptions.path,
                 options: Options(
@@ -50,7 +50,7 @@ class CampaignServices {
               );
               return handler.resolve(response);
             } catch (e) {
-              // If token refresh fails, forward the error
+              print("Token refresh failed: $e");
               return handler.next(error);
             }
           }
@@ -67,7 +67,7 @@ class CampaignServices {
   }
 
   Future<Response> getCampaignById(String id) async {
-    return await _dio.get('/campaign/business/$id');
+    return await _dio.get('/campaign/$id');
   }
 
   Future<Response> getCampaigns() async {
