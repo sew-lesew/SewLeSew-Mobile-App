@@ -20,20 +20,29 @@ class SignInBloc extends Bloc<SharedEvent, SignInState> {
   }
   Future<void> _signInSubmitEvent(
       SignInSubmitEvent event, Emitter<SignInState> emit) async {
+    print("Received SignInSubmitEvent with:");
+    print(" - Email: ${event.email}");
+    print(" - Phone: ${event.phoneNumber}");
+    print(" - Password: ${event.password != null ? '******' : 'EMPTY'}");
+
     emit(state.copyWith(isSignInLoading: true));
     try {
-      await sl<LoginUsecase>().call(
-          params: LoginEntity(
-              phoneNumber: EthiopianPhoneValidator.normalize(event.phoneNumber),
-              email: event.email,
-              password: event.password));
+      final loginInfo = LoginEntity(
+          phoneNumber: event.phoneNumber != null
+              ? EthiopianPhoneValidator.normalize(event.phoneNumber!)
+              : null,
+          email: event.email,
+          password: event.password);
+      print("Login Info: $loginInfo");
+
+      await sl<LoginUsecase>().call(params: loginInfo);
 
       emit(state.copyWith(
         isSignInLoading: false,
         signInSuccess: true,
-        signInFailure: "",
       ));
     } catch (e) {
+      print("Error during login: $e");
       emit(state.copyWith(
           isSignInLoading: false,
           signInFailure: e.toString(),
