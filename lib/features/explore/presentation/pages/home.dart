@@ -7,6 +7,7 @@ import 'package:sewlesew_fund/config/routes/names.dart';
 import 'package:sewlesew_fund/config/theme/colors.dart';
 import 'package:sewlesew_fund/core/resources/generic_state.dart';
 import 'package:sewlesew_fund/core/resources/success_failure.dart';
+import 'package:sewlesew_fund/features/explore/presentation/widgets/campaign_card_shimmer.dart';
 import 'package:sewlesew_fund/features/explore/presentation/widgets/zigzagline.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -183,19 +184,20 @@ class _HomeState extends State<Home> {
                 GenericState<dartz.Either<Failure, Success>>>(
               builder: (context, state) {
                 if (state.isLoading!) {
-                  return const Center(child: CircularProgressIndicator());
+                  return campaignCardSkeleton(context);
                 }
-                if (state.failure != null) {
-                  return Center(
-                      child: Text("Error: ${dartz.Left(state.failure!)}"));
-                }
+                // if (state.failure != null) {
+                //   return Center(
+                //       child: Text("Error: ${dartz.Left(state.failure!)}"));
+                // }
 
                 final data = state.data;
                 if (data == null || data.isLeft()) {
                   return const Center(child: Text("No campaigns found."));
                 }
-
-                final campaigns = (data as dartz.Right).value;
+                final campaignData = (data as dartz.Right).value;
+                final List<CampaignEntity> campaigns =
+                    campaignData.campaigns ?? [];
                 print(campaigns);
                 return ListView.builder(
                   shrinkWrap: true,
@@ -314,10 +316,12 @@ class _HomeState extends State<Home> {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    CampaignDetailScreen(campaignId: campaignId)));
+          context,
+          MaterialPageRoute(
+              builder: (_) => CampaignDetailScreen(campaignId: campaignId)),
+        ).then((_) {
+          context.read<CampaignCubit>().getCampaigns();
+        });
       },
       child: Stack(
         children: [
@@ -334,19 +338,11 @@ class _HomeState extends State<Home> {
                 ClipRRect(
                   borderRadius:
                       const BorderRadius.vertical(top: Radius.circular(12)),
-                  child: CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                            colorFilter: ColorFilter.mode(
-                                Colors.red, BlendMode.colorBurn)),
-                      ),
-                    ),
-                    placeholder: (context, url) => CircularProgressIndicator(),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  child: Image(
+                    image: CachedNetworkImageProvider(imageUrl),
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: 200.h,
                   ),
                 ),
                 Padding(
