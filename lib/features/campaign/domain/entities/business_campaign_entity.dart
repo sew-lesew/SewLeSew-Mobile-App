@@ -59,4 +59,25 @@ class BusinessCampaignEntity {
     this.coverImage,
     this.otherImages,
   });
+  // Factory method to initialize with default values
+  factory BusinessCampaignEntity.initialize() {
+    return BusinessCampaignEntity(
+      fullName: '',
+      contactEmail: '',
+      contactPhoneNumber: '',
+      region: '',
+      city: '',
+      title: '',
+      goalAmount: 0.0,
+      description: '',
+      deadline: '',
+      bankName: '',
+      holderName: '',
+      accountNumber: '',
+      sector: '',
+      tinNumber: '',
+      licenseNumber: '',
+      category: '',
+    );
+  }
 }
