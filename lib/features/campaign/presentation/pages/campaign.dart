@@ -32,7 +32,7 @@ class Campaign extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            CreateCampaignTab(),
+            CreateCampaignForm(),
             MyCampaignsTab(),
             PendingCampaignsTab(),
             DeletedCampaignsTab(),

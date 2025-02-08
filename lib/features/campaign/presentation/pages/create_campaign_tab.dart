@@ -1,277 +1,166 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'dart:io';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sewlesew_fund/features/campaign/domain/entities/business_campaign_entity.dart';
 
-import '../../domain/entities/business_campaign_entity.dart';
+import '../bloc/create_campaign_bloc/create_campaign_bloc.dart';
+import '../bloc/create_campaign_bloc/create_campaign_event.dart';
+import '../bloc/create_campaign_bloc/create_campaign_state.dart';
+import '../widgets/bank_and_business.dart';
+import '../widgets/basic_information.dart';
+import '../widgets/document_upload.dart';
+import '../widgets/facny_button.dart';
+import '../widgets/location_and_campaign.dart';
 
-class CreateCampaignTab extends StatefulWidget {
-  const CreateCampaignTab({super.key});
+class CreateCampaignForm extends StatefulWidget {
+  const CreateCampaignForm({super.key});
 
   @override
-  _CreateCampaignTabState createState() => _CreateCampaignTabState();
+  State<CreateCampaignForm> createState() => _CreateCampaignFormState();
 }
 
-class _CreateCampaignTabState extends State<CreateCampaignTab> {
-  final PageController _pageController = PageController();
-  final _formKey = GlobalKey<FormState>();
-  int _currentPage = 0;
-  final List<Widget> _pages = [];
+class _CreateCampaignFormState extends State<CreateCampaignForm> {
+  final formKey = GlobalKey<FormState>();
 
-  final BusinessCampaignEntity _campaignData = BusinessCampaignEntity(
-    fullName: '',
-    contactEmail: '',
-    contactPhoneNumber: '',
-    region: '',
-    city: '',
-    title: '',
-    goalAmount: 0,
-    description: '',
-    deadline: '',
-    bankName: '',
-    holderName: '',
-    accountNumber: '',
-    sector: '',
-    tinNumber: '',
-    licenseNumber: '',
-    category: '',
-  );
+  final BusinessCampaignEntity campaignData =
+      BusinessCampaignEntity.initialize();
 
   @override
   void initState() {
     super.initState();
-    _pages.addAll([
-      _BasicInfoForm(campaignData: _campaignData),
-      _LocationInfoForm(campaignData: _campaignData),
-      _FinancialInfoForm(campaignData: _campaignData),
-      _DocumentUploadForm(campaignData: _campaignData),
-    ]);
+    context.read<CreateCampaignBloc>();
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      // Submit logic here
-      print(_campaignData);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Campaign Submitted Successfully')),
-      );
-    }
-  }
+  // final List<LinearGradient> _pageGradients = [
+  //   LinearGradient(
+  //     colors: [Color(0xFF13ADB7), Color(0xFF0097D3)],
+  //     begin: Alignment.topLeft,
+  //     end: Alignment.bottomRight,
+  //   ),
+  //   LinearGradient(
+  //     colors: [Color(0xFF005782), Color(0xFF0097D3)],
+  //     begin: Alignment.topLeft,
+  //     end: Alignment.bottomRight,
+  //   ),
+  //   LinearGradient(
+  //     colors: [Color(0xFF212121), Color(0xFF005782)],
+  //     begin: Alignment.topLeft,
+  //     end: Alignment.bottomRight,
+  //   ),
+  //   LinearGradient(
+  //     colors: [Color(0xFF0097D3), Color(0xFF13ADB7)],
+  //     begin: Alignment.topLeft,
+  //     end: Alignment.bottomRight,
+  //   ),
+  // ];
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          Expanded(
-            child: PageView.builder(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: _pages.length,
-              itemBuilder: (context, index) => _pages[index],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (_currentPage > 0)
-                  ElevatedButton(
-                    onPressed: () {
-                      _pageController.previousPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
-                      setState(() => _currentPage--);
-                    },
-                    child: const Text('Back'),
+    return BlocConsumer<CreateCampaignBloc, CreateCampaignState>(
+      listener: (context, state) {
+        if (state.state.isSuccess == true) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Campaign created successfully!')),
+          );
+          Navigator.of(context).pop();
+        } else if (state.state.failure != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content:
+                    Text('Failed to create campaign: ${state.state.failure}')),
+          );
+        }
+      },
+      builder: (context, state) {
+        final currentPage = state.currentPage;
+
+        return Stack(
+          children: [
+            AnimatedContainer(
+              duration: Duration(milliseconds: 500),
+              // decoration: BoxDecoration(
+              //   gradient: _pageGradients[currentPage],
+              // ),
+              child: Column(
+                children: [
+                  SizedBox(height: 4.h),
+                  LinearProgressIndicator(
+                    value: (currentPage + 1) / 4,
+                    backgroundColor: Colors.white,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).primaryColor,
+                    ),
                   ),
-                if (_currentPage < _pages.length - 1)
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _pageController.nextPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        );
-                        setState(() => _currentPage++);
-                      }
-                    },
-                    child: const Text('Next'),
+                  Expanded(
+                    child: PageView(
+                      controller: PageController(initialPage: currentPage),
+                      physics:
+                          NeverScrollableScrollPhysics(), // Disable manual swiping
+                      children: [
+                        BasicInformationPage(
+                            formKey: formKey, campaignData: campaignData),
+                        LocationAndCampaignPage(
+                            formKey: formKey, campaignData: campaignData),
+                        BankAndBusinessPage(
+                            formKey: formKey, campaignData: campaignData),
+                        DocumentUploadsPage(formKey: formKey),
+                      ],
+                    ),
                   ),
-                if (_currentPage == _pages.length - 1)
-                  ElevatedButton(
-                    onPressed: _submitForm,
-                    child: const Text('Submit'),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        if (currentPage > 0)
+                          FancyButton(
+                            text: 'Back',
+                            icon: Icons.arrow_back,
+                            onPressed: () {
+                              context
+                                  .read<CreateCampaignBloc>()
+                                  .add(PreviousPageEvent());
+                            },
+                          ),
+                        if (currentPage < 3)
+                          FancyButton(
+                            text: 'Next',
+                            icon: Icons.arrow_forward,
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                formKey.currentState!.save();
+                                context
+                                    .read<CreateCampaignBloc>()
+                                    .add(NextPageEvent(campaignData));
+                              }
+                            },
+                          ),
+                        if (currentPage == 3)
+                          FancyButton(
+                            text: 'Submit',
+                            icon: Icons.check,
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                formKey.currentState!.save();
+                                context
+                                    .read<CreateCampaignBloc>()
+                                    .add(SubmitFormEvent(campaignData));
+                              }
+                            },
+                          ),
+                      ],
+                    ),
                   ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// Step 1: Basic Information
-class _BasicInfoForm extends StatelessWidget {
-  final BusinessCampaignEntity campaignData;
-
-  const _BasicInfoForm({required this.campaignData});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextFormField(
-            decoration: const InputDecoration(labelText: 'Full Name'),
-            validator: (value) => value!.isEmpty ? 'Required' : null,
-            onSaved: (value) => campaignData.fullName = value!,
-          ),
-          // Add similar fields for other basic info
-          TextFormField(
-            decoration: const InputDecoration(labelText: 'Campaign Title'),
-            validator: (value) => value!.isEmpty ? 'Required' : null,
-            onSaved: (value) => campaignData.title = value!,
-          ),
-          TextFormField(
-            decoration: const InputDecoration(labelText: 'Description'),
-            maxLines: 5,
-            validator: (value) => value!.isEmpty ? 'Required' : null,
-            onSaved: (value) => campaignData.description = value!,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// Step 2: Location Information
-class _LocationInfoForm extends StatelessWidget {
-  final BusinessCampaignEntity campaignData;
-
-  const _LocationInfoForm({required this.campaignData});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          TextFormField(
-            decoration: const InputDecoration(labelText: 'Region'),
-            validator: (value) => value!.isEmpty ? 'Required' : null,
-            onSaved: (value) => campaignData.region = value!,
-          ),
-          TextFormField(
-            decoration: const InputDecoration(labelText: 'City'),
-            validator: (value) => value!.isEmpty ? 'Required' : null,
-            onSaved: (value) => campaignData.city = value!,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// Step 3: Financial Information
-class _FinancialInfoForm extends StatelessWidget {
-  final BusinessCampaignEntity campaignData;
-
-  const _FinancialInfoForm({required this.campaignData});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          TextFormField(
-            decoration: const InputDecoration(labelText: 'Goal Amount (Birr)'),
-            keyboardType: TextInputType.number,
-            validator: (value) => value!.isEmpty ? 'Required' : null,
-            onSaved: (value) => campaignData.goalAmount = double.parse(value!),
-          ),
-          TextFormField(
-            decoration: const InputDecoration(labelText: 'Bank Name'),
-            validator: (value) => value!.isEmpty ? 'Required' : null,
-            onSaved: (value) => campaignData.bankName = value!,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// Step 4: Document Upload
-class _DocumentUploadForm extends StatefulWidget {
-  final BusinessCampaignEntity campaignData;
-
-  const _DocumentUploadForm({required this.campaignData});
-
-  @override
-  __DocumentUploadFormState createState() => __DocumentUploadFormState();
-}
-
-class __DocumentUploadFormState extends State<_DocumentUploadForm> {
-  final ImagePicker _picker = ImagePicker();
-
-  Future<void> _pickFile(File? file, Function(File?) setFile) async {
-    final XFile? result = await _picker.pickImage(source: ImageSource.gallery);
-    if (result != null) {
-      setState(() => setFile(File(result.path)));
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          _FileUploadButton(
-            label: 'Upload TIN Certificate',
-            onPressed: () => _pickFile(
-              widget.campaignData.tinCertificate,
-              (file) => widget.campaignData.tinCertificate = file,
-            ),
-          ),
-          _FileUploadButton(
-            label: 'Upload Logo',
-            onPressed: () => _pickFile(
-              widget.campaignData.logo,
-              (file) => widget.campaignData.logo = file,
-            ),
-          ),
-          // Add similar buttons for other files
-        ],
-      ),
-    );
-  }
-}
-
-class _FileUploadButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onPressed;
-
-  const _FileUploadButton({
-    required this.label,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: onPressed,
-      icon: const Icon(Icons.upload_file),
-      label: Text(label),
-      style: ElevatedButton.styleFrom(
-        minimumSize: const Size(double.infinity, 50),
-      ),
+            if (state.state.isLoading == true)
+              Center(
+                child: CircularProgressIndicator(),
+              ),
+          ],
+        );
+      },
     );
   }
 }
