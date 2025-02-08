@@ -29,6 +29,7 @@ import 'features/campaign/domain/usecases/create_business_campaign.dart';
 import 'features/campaign/domain/usecases/get_campaign_by_id.dart';
 import 'features/campaign/domain/usecases/get_campaigns.dart';
 import 'features/campaign/domain/usecases/get_my_campaigns.dart';
+import 'features/campaign/presentation/bloc/create_campaign_bloc/create_campaign_bloc.dart';
 
 final GetIt sl = GetIt.instance;
 Future<void> initializeDependencies() async {
@@ -69,4 +70,5 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<ResetPasswordBloc>(() => ResetPasswordBloc());
   sl.registerFactory<SignOutCubit>(() => SignOutCubit());
   sl.registerFactory<CampaignCubit>(() => CampaignCubit());
+  sl.registerFactory<CreateCampaignBloc>(() => CreateCampaignBloc());
 }
