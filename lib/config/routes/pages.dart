@@ -10,6 +10,7 @@ import 'package:sewlesew_fund/features/auth/presentation/pages/sign_up.dart';
 import 'package:sewlesew_fund/features/auth/presentation/pages/verification_code.dart';
 import 'package:sewlesew_fund/features/campaign/presentation/bloc/campaign_cubit.dart';
 import 'package:sewlesew_fund/features/campaign/presentation/bloc/create_campaign_bloc/create_campaign_bloc.dart';
+import 'package:sewlesew_fund/features/donations/presentation/bloc/donation_cubit.dart';
 import 'package:sewlesew_fund/features/donations/presentation/pages/payment.dart';
 import 'package:sewlesew_fund/features/campaign/presentation/pages/campaign_detail.dart';
 import 'package:sewlesew_fund/features/user_profile/presentation/pages/FAQ.dart';
@@ -81,7 +82,10 @@ class AppPages {
         route: AppRoutes.EDIT_PROFILE,
         page: const EditProfileScreen(),
       ),
-      PageEntity(route: AppRoutes.PAYMENT, page: const DonatePayment()),
+      PageEntity(
+          route: AppRoutes.PAYMENT,
+          page: const DonatePayment(),
+          bloc: BlocProvider(create: (_) => sl<DonationCubit>())),
       PageEntity(route: AppRoutes.FAQ, page: const FAQ()),
       PageEntity(route: AppRoutes.MAIN, page: const MyHomePage()),
     ];
