@@ -15,6 +15,10 @@ import 'package:sewlesew_fund/features/auth/presentation/bloc/sign_up/sign_up_bl
 import 'package:sewlesew_fund/features/auth/presentation/bloc/verification/verification_bloc.dart';
 import 'package:sewlesew_fund/features/campaign/domain/repository/campaign_repository.dart';
 import 'package:sewlesew_fund/features/campaign/presentation/bloc/campaign_cubit.dart';
+import 'package:sewlesew_fund/features/donations/domain/repository/donation_repository.dart';
+import 'package:sewlesew_fund/features/donations/domain/usecases/donate.dart';
+import 'package:sewlesew_fund/features/donations/domain/usecases/get_donation_by_campaign.dart';
+import 'package:sewlesew_fund/features/donations/domain/usecases/verify_donation.dart';
 
 import 'core/services/token_services.dart';
 import 'features/auth/data/repository/auth_repository_impl.dart';
@@ -30,6 +34,10 @@ import 'features/campaign/domain/usecases/get_campaign_by_id.dart';
 import 'features/campaign/domain/usecases/get_campaigns.dart';
 import 'features/campaign/domain/usecases/get_my_campaigns.dart';
 import 'features/campaign/presentation/bloc/create_campaign_bloc/create_campaign_bloc.dart';
+import 'features/donations/data/repository/donation_repository_impl.dart';
+import 'features/donations/data/services/donation_services.dart';
+import 'features/donations/domain/usecases/get_donation_by_user.dart';
+import 'features/donations/presentation/bloc/donation_cubit.dart';
 
 final GetIt sl = GetIt.instance;
 Future<void> initializeDependencies() async {
@@ -40,11 +48,14 @@ Future<void> initializeDependencies() async {
 // repository
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl());
   sl.registerLazySingleton<CampaignRepository>(() => CampaignRepositoryImpl());
+  sl.registerLazySingleton<DonationRepository>(() => DonationRepositoryImpl());
 
   //services
   sl.registerLazySingleton<AuthServices>(() => AuthServicesImpl());
   sl.registerLazySingleton<TokenService>(() => TokenService());
   sl.registerLazySingleton<CampaignServices>(() => CampaignServices());
+  sl.registerLazySingleton<DonationServices>(() => DonationServices());
+
 //Usecases
   //Auth Usecases
   sl.registerSingleton<LoginUsecase>(LoginUsecase());
@@ -63,6 +74,13 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<CreateBusinessCampaignUsecase>(
       CreateBusinessCampaignUsecase());
 
+  // Donation Usecases
+  sl.registerSingleton<DonateUseCase>(DonateUseCase());
+  sl.registerSingleton<GetDonationByUserUseCase>(GetDonationByUserUseCase());
+  sl.registerSingleton<GetDonationByCampaignUseCase>(
+      GetDonationByCampaignUseCase());
+  sl.registerSingleton<VerifyDonationUseCase>(VerifyDonationUseCase());
+
   // Blocs
   sl.registerFactory<SignInBloc>(() => SignInBloc());
   sl.registerFactory<SignUpBloc>(() => SignUpBloc());
@@ -71,4 +89,5 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<SignOutCubit>(() => SignOutCubit());
   sl.registerFactory<CampaignCubit>(() => CampaignCubit());
   sl.registerFactory<CreateCampaignBloc>(() => CreateCampaignBloc());
+  sl.registerFactory<DonationCubit>(() => DonationCubit());
 }
