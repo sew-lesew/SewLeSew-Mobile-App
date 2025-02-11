@@ -7,7 +7,6 @@ import 'package:sewlesew_fund/core/resources/success_failure.dart';
 
 import 'package:sewlesew_fund/core/resources/generic_state.dart';
 import 'package:sewlesew_fund/features/campaign/presentation/pages/campaign_detail.dart';
-import '../../../explore/presentation/widgets/campaign_card_shimmer.dart';
 import '../../domain/entities/campaign_entity.dart';
 import '../bloc/campaign_cubit.dart';
 import '../widgets/my_campaign_card_skeleton.dart';
@@ -35,9 +34,9 @@ class _MyCampaignsTabState extends State<MyCampaignsTab> {
           return myCampaignCardSkeleton(context);
         }
 
-        // if (state.failure != null) {
-        //   return Center(child: Text(state.failure!));
-        // }
+        if (state.failure != null) {
+          return Center(child: Text(state.failure!));
+        }
 
         final data = state.data;
         if (data == null || data.isLeft()) {
