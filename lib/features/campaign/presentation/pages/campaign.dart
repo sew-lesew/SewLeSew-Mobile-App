@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sewlesew_fund/features/campaign/presentation/pages/category_campaign.dart';
 
 import '../../../../config/theme/colors.dart';
-import 'create_campaign_tab.dart';
 import 'my_campaigns_tab.dart';
 
 class Campaign extends StatelessWidget {
@@ -32,7 +32,7 @@ class Campaign extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            CreateCampaignForm(),
+            CampaignCategory(),
             MyCampaignsTab(),
             PendingCampaignsTab(),
             DeletedCampaignsTab(),
