@@ -6,11 +6,21 @@ import 'package:sewlesew_fund/features/campaign/domain/repository/campaign_repos
 import '../../../../injection_container.dart';
 
 class CreateBusinessCampaignUsecase
-    extends Usecase<Either<Failure, Success>, BusinessCampaignEntity> {
+    extends Usecase<Either<Failure, Success>, CreateBusinessCampaignParams> {
   @override
   Future<Either<Failure, Success>> call(
-      {BusinessCampaignEntity? params}) async {
-    return await sl<CampaignRepository>()
-        .createBusinessCampaign(entity: params!);
+      {CreateBusinessCampaignParams? params}) async {
+    return await sl<CampaignRepository>().createBusinessCampaign(
+        entity: params!.entity, campaignType: params.campaignType);
   }
+}
+
+class CreateBusinessCampaignParams {
+  final BusinessCampaignEntity entity;
+  final String campaignType;
+
+  CreateBusinessCampaignParams({
+    required this.entity,
+    required this.campaignType,
+  });
 }
