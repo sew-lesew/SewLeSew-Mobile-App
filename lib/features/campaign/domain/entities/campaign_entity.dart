@@ -11,6 +11,7 @@ class CampaignEntity extends Equatable {
   final String category;
   final DateTime deadline;
   final String status;
+  final int donationCount;
   final List<CampaignMediaEntity> campaignMedia;
 
   const CampaignEntity({
@@ -23,6 +24,7 @@ class CampaignEntity extends Equatable {
     required this.deadline,
     required this.status,
     required this.campaignMedia,
+    required this.donationCount,
   });
 
   @override
@@ -35,6 +37,7 @@ class CampaignEntity extends Equatable {
         category,
         deadline,
         status,
-        campaignMedia
+        campaignMedia,
+        donationCount,
       ];
 }
