@@ -16,6 +16,8 @@ class CampaignServices {
           const pathsWithHeaders = [
             '/campaign/me',
             '/campaign/business',
+            '/campaign/charity/personal',
+            '/campaign/charity/organization'
           ];
 
           if (pathsWithHeaders.contains(options.path)) {
@@ -60,19 +62,56 @@ class CampaignServices {
     );
   }
   Future<Response> createBusinessCampaign(
-      Future<FormData> campaignFormData) async {
-    final response =
-        await _dio.post('/campaign/business', data: campaignFormData);
-    return response;
+      Future<FormData> campaignFormData, String campaignType) async {
+    try {
+      print("Creating campaign ....");
+      final formData = await campaignFormData; // Resolve the Future<FormData>
+      print("FormData: $formData"); // Log the FormData
+
+      // Determine the endpoint based on the campaignType
+      String endpoint;
+      switch (campaignType) {
+        case 'Business':
+          endpoint = '/campaign/business';
+          break;
+        case 'Personal':
+          endpoint = '/campaign/charity/personal';
+          break;
+        case 'Organizational':
+          endpoint = '/campaign/charity/organization';
+          break;
+        default:
+          throw Exception('Invalid campaign type');
+      }
+
+      // Send the request to the determined endpoint
+      final response = await _dio.post(
+        endpoint,
+        data: formData, // Pass the resolved FormData
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data', // Add this header
+          },
+        ),
+      );
+      print("Campaign created successfully");
+      return response;
+    } catch (e) {
+      print("Error creating campaign: $e");
+      rethrow;
+    }
   }
 
   Future<Response> getCampaignById(String id) async {
     return await _dio.get('/campaign/$id');
   }
 
-  Future<Response> getCampaigns() async {
+  Future<Response> getCampaigns(
+      {required String? category, required String? name}) async {
     print("Starting getting all campaigns");
-    return await _dio.get('/campaign');
+
+    return await _dio
+        .get('/campaign', queryParameters: {'Category': category, 'for': name});
   }
 
   Future<Response> getMyCampaign() async {
