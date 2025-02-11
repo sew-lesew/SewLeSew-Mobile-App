@@ -5,8 +5,9 @@ import '../../../../core/resources/success.dart';
 
 abstract class CampaignRepository {
   Future<Either<Failure, Success>> createBusinessCampaign(
-      {BusinessCampaignEntity entity});
-  Future<Either<Failure, Success>> getCampaigns();
+      {BusinessCampaignEntity entity, required String campaignType});
+  Future<Either<Failure, Success>> getCampaigns(
+      {String? category, String? name});
   Future<Either<Failure, Success>> getMyCampaigns();
   Future<Either<Failure, Success>> getCampaignById(String id);
 }
