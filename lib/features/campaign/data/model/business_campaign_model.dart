@@ -13,21 +13,22 @@ class BusinessCampaignModel {
   final String city;
   final String? relativeLocation;
   final String title;
-  final double goalAmount;
-  final double? raisedAmount;
+  final int goalAmount;
+  final int? raisedAmount;
   final String description;
   final String deadline;
   final String? website;
-  final String bankName;
+  final String? bankName;
   final String holderName;
   final String accountNumber;
-  final String sector;
+  final String? sector;
   final String tinNumber;
   final String licenseNumber;
-  final String category;
+  final String? category;
   final File? tinCertificate;
   final File? registrationLicense;
   final List<File>? supportingDocuments;
+  final File? personalDocument;
   final File? logo;
   final File? coverImage;
   final List<File>? otherImages;
@@ -57,6 +58,7 @@ class BusinessCampaignModel {
     this.tinCertificate,
     this.registrationLicense,
     this.supportingDocuments,
+    this.personalDocument,
     this.logo,
     this.coverImage,
     this.otherImages,
@@ -86,6 +88,7 @@ class BusinessCampaignModel {
       'category': category,
       'tinCertificate': tinCertificate,
       'registrationLicense': registrationLicense,
+      'personalDocument': personalDocument,
       'supportingDocuments': supportingDocuments,
       'logo': logo,
       'coverImage': coverImage,
@@ -109,7 +112,8 @@ class BusinessCampaignModel {
           ? map['relativeLocation'] as String
           : null,
       title: map['title'] as String,
-      goalAmount: map['goalAmount'] as double,
+      goalAmount: map['goalAmount'] as int,
+      raisedAmount: map['raisedAmount'] as int,
       description: map['description'] as String,
       deadline: map['deadline'] as String,
       website: map['website'] != null ? map['website'] as String : null,
