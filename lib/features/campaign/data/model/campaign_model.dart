@@ -10,6 +10,7 @@ class CampaignModel {
   final DateTime deadline;
   final String status;
   final List<CampaignMediaModel> campaignMedia;
+  final int donationCount;
 
   const CampaignModel({
     required this.id,
@@ -21,6 +22,7 @@ class CampaignModel {
     required this.deadline,
     required this.status,
     required this.campaignMedia,
+    required this.donationCount,
   });
 
   factory CampaignModel.fromJson(Map<String, dynamic> json) {
@@ -36,6 +38,8 @@ class CampaignModel {
       campaignMedia: (json['campaignMedia'] as List)
           .map((e) => CampaignMediaModel.fromJson(e))
           .toList(),
+      // How to handle IN _count object there is donation
+      donationCount: json['_count']['donation'],
     );
   }
 
