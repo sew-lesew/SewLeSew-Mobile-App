@@ -20,7 +20,8 @@ class CreateCampaignBloc
 
   void _handleNextPageEvent(
       NextPageEvent event, Emitter<CreateCampaignState> emit) {
-    emit(state.copyWith(currentPage: state.currentPage + 1));
+    emit(
+        state.copyWith(currentPage: state.currentPage + 1, state: state.state));
   }
 
   void _handlePreviousPageEvent(
@@ -33,8 +34,9 @@ class CreateCampaignBloc
     emit(state.copyWith(
       state: state.state.copyWith(isLoading: true),
     ));
-    final result = await sl<CreateBusinessCampaignUsecase>()
-        .call(params: event.campaignData);
+    final result = await sl<CreateBusinessCampaignUsecase>().call(
+        params: CreateBusinessCampaignParams(
+            entity: event.campaignData, campaignType: event.campaignType));
     result.fold(
         (failure) => emit(state.copyWith(
               state: state.state.copyWith(
