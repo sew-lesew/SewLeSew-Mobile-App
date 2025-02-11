@@ -17,6 +17,7 @@ class CampaignMapper {
       campaignMedia: model.campaignMedia
           .map((e) => CampaignMediaEntity(id: e.id, url: e.url))
           .toList(),
+      donationCount: model.donationCount,
     );
   }
 
@@ -33,6 +34,7 @@ class CampaignMapper {
       campaignMedia: entity.campaignMedia
           .map((e) => CampaignMediaModel(id: e.id, url: e.url))
           .toList(),
+      donationCount: entity.donationCount,
     );
   }
 }
