@@ -21,9 +21,10 @@ class PreviousPageEvent extends CreateCampaignEvent {}
 
 class SubmitFormEvent extends CreateCampaignEvent {
   final BusinessCampaignEntity campaignData;
+  final String campaignType;
 
-  const SubmitFormEvent(this.campaignData);
+  const SubmitFormEvent(this.campaignData, this.campaignType);
 
   @override
-  List<Object?> get props => [campaignData];
+  List<Object?> get props => [campaignData, campaignType];
 }
