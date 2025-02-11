@@ -46,10 +46,10 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
               return const Center(child: CircularProgressIndicator());
             }
 
-            if (state.failure != null) {
-              return Center(
-                  child: Text("Error: ${dartz.Left(state.failure!)}"));
-            }
+            // if (state.failure != null) {
+            //   return Center(
+            //       child: Text("Error: ${dartz.Left(state.failure!)}"));
+            // }
 
             final data = state.data;
             if (data == null || data.isLeft()) {
