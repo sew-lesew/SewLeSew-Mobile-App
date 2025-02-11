@@ -18,14 +18,20 @@ import '../services/remote/campaign_services.dart';
 class CampaignRepositoryImpl implements CampaignRepository {
   @override
   Future<Either<Failure, Success>> createBusinessCampaign(
-      {BusinessCampaignEntity? entity}) async {
+      {BusinessCampaignEntity? entity, required String campaignType}) async {
     try {
+      print("Converting entity to model");
       final BusinessCampaignModel businessCampaignModel =
           BusinessCampaignMapper.fromEntity(entity!);
+      print("business campaign model is ${businessCampaignModel.toMap()}");
+      print("Converting entity to formdata");
       final campaignFormData =
-          BusinessCampaignMapper.toFormData(businessCampaignModel);
-      final response =
-          await sl<CampaignServices>().createBusinessCampaign(campaignFormData);
+          BusinessCampaignMapper.toFormData(businessCampaignModel, entity);
+      // not as an instance to be displayed
+      print("campaign form data is $campaignFormData");
+      print("campaign form data is $campaignFormData");
+      final response = await sl<CampaignServices>()
+          .createBusinessCampaign(campaignFormData, campaignType);
 
       if (response.statusCode == 200) {
         return Right(Success(message: response.data["message"])); // Success
@@ -65,9 +71,11 @@ class CampaignRepositoryImpl implements CampaignRepository {
   }
 
   @override
-  Future<Either<Failure, Success>> getCampaigns() async {
+  Future<Either<Failure, Success>> getCampaigns(
+      {String? category, String? name}) async {
     try {
-      final response = await sl<CampaignServices>().getCampaigns();
+      final response = await sl<CampaignServices>()
+          .getCampaigns(category: category, name: name);
       print(response);
       final data = response.data['data'];
       print("all campaigns: are $data");
