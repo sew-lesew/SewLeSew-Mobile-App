@@ -1,6 +1,8 @@
 // Entity
 import 'dart:io';
 
+import '../../../../core/constants/enum_campaign.dart';
+
 class BusinessCampaignEntity {
   String fullName;
   String? publicEmail;
@@ -11,21 +13,22 @@ class BusinessCampaignEntity {
   String city;
   String? relativeLocation;
   String title;
-  double goalAmount;
-  double? raisedAmount;
+  int goalAmount;
+  int? raisedAmount;
   String description;
   String deadline;
   String? website;
-  String bankName;
+  BankName? bankName;
   String holderName;
   String accountNumber;
-  String sector;
+  BusinessSector? sector;
   String tinNumber;
   String licenseNumber;
-  String category;
+  Category? category;
   File? tinCertificate;
   File? registrationLicense;
   List<File>? supportingDocuments;
+ File? personalDocuments;
   File? logo;
   File? coverImage;
   List<File>? otherImages;
@@ -45,16 +48,17 @@ class BusinessCampaignEntity {
     required this.description,
     required this.deadline,
     this.website,
-    required this.bankName,
+    this.bankName,
     required this.holderName,
     required this.accountNumber,
-    required this.sector,
+    this.sector,
     required this.tinNumber,
     required this.licenseNumber,
-    required this.category,
+    this.category,
     this.tinCertificate,
     this.registrationLicense,
     this.supportingDocuments,
+    this.personalDocuments,
     this.logo,
     this.coverImage,
     this.otherImages,
@@ -68,16 +72,13 @@ class BusinessCampaignEntity {
       region: '',
       city: '',
       title: '',
-      goalAmount: 0.0,
+      goalAmount: 0,
       description: '',
       deadline: '',
-      bankName: '',
       holderName: '',
       accountNumber: '',
-      sector: '',
       tinNumber: '',
       licenseNumber: '',
-      category: '',
     );
   }
 }
