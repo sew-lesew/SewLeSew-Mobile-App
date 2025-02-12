@@ -1,7 +1,7 @@
 // Ethiopian Phone Number Validation Utility
 class EthiopianPhoneValidator {
   static final RegExp mobilePattern = RegExp(r'^(\+251|0)(9\d{8})$');
-  static final RegExp fixedLinePattern = RegExp(r'^(\+251|0)([1-5]\d{8})$');
+  static final RegExp fixedLinePattern = RegExp(r'^(\+251|0)([1-7]\d{8})$');
   static final RegExp tollFreePattern = RegExp(r'^(\+251|0)(800\d{6})$');
 
   // Normalize the number by removing unwanted characters
