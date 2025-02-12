@@ -22,6 +22,7 @@ import '../../features/auth/presentation/bloc/sign_up/sign_up_bloc.dart';
 import '../../features/auth/presentation/bloc/welcome/welcome_bloc.dart';
 import '../../features/auth/presentation/pages/sign_in.dart';
 import '../../features/auth/presentation/pages/welcome.dart';
+import '../../features/user_profile/presentation/bloc/profile_cubit.dart';
 import '../../features/user_profile/presentation/pages/edit_profile.dart';
 import '../../injection_container.dart';
 
@@ -80,6 +81,9 @@ class AppPages {
           )),
       PageEntity(
         route: AppRoutes.EDIT_PROFILE,
+        bloc: BlocProvider(
+          create: (_) => sl<ProfileCubit>(),
+        ),
         page: const EditProfileScreen(),
       ),
       PageEntity(
