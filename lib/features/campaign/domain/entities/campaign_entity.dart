@@ -11,7 +11,7 @@ class CampaignEntity extends Equatable {
   final String category;
   final DateTime deadline;
   final String status;
-  final int donationCount;
+  final String donationCount;
   final List<CampaignMediaEntity> campaignMedia;
 
   const CampaignEntity({
