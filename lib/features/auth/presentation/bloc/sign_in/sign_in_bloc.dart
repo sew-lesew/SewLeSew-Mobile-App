@@ -58,7 +58,6 @@ class SignInBloc extends Bloc<SharedEvent, SignInState> {
       emit(state.copyWith(
         isGoogleSignInLoading: false,
         isGoogleSignInSuccess: true,
-        googleSignInFailure: "",
       ));
     } catch (e) {
       emit(state.copyWith(
