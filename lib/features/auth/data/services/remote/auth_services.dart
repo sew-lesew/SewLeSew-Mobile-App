@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sewlesew_fund/core/constants/constant.dart';
 import 'package:sewlesew_fund/features/auth/data/mapper/login_mapper.dart';
 import 'package:sewlesew_fund/features/auth/data/mapper/sign_up_mapper.dart';
 import 'package:sewlesew_fund/features/auth/domain/usecases/forgot_password.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../../../../core/resources/error_handler.dart';
 import '../../../../../injection_container.dart';
 import '../../../domain/entities/login_entity.dart';
 import '../../../domain/entities/sign_up_entity.dart';
@@ -28,7 +32,7 @@ abstract class AuthServices {
 class AuthServicesImpl implements AuthServices {
   final storageService = sl<StorageService>();
   final Dio _dio = Dio(BaseOptions(baseUrl: AppConstant.BASE_URL));
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
   AuthServicesImpl() {
     _dio.interceptors.add(
       InterceptorsWrapper(
@@ -105,13 +109,7 @@ class AuthServicesImpl implements AuthServices {
     } catch (e) {
       if (e is DioException) {
         print('DioException: ${e.message}');
-        if (e.response != null) {
-          print('Error response: ${e.response?.data}');
-          throw Exception('Sign-in failed: ${e.response?.data}');
-        } else {
-          print('Unexpected error: $e');
-          throw Exception('Unexpected error: $e');
-        }
+        throw ErrorHandler.mapErrorToMessage(e);
       }
     }
   }
@@ -135,55 +133,62 @@ class AuthServicesImpl implements AuthServices {
       print("Access Token is :$getToken");
     } catch (e) {
       print("Error cached $e");
-      throw Exception(e.toString());
+      throw ErrorHandler.mapErrorToMessage(e);
     }
   }
 
   @override
-  Future<void> signinGoogle() async {
-    try {
-      // Step 1: Start Google Sign-In
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        throw Exception("Google Sign-In was canceled by the user.");
-      }
+  // Future<void> signinGoogle() async {
+  //   final GoogleSignIn googleSignIn = GoogleSignIn(
+  //     scopes: [
+  //       'email',
+  //       'https://www.googleapis.com/auth/contacts.readonly',
+  //       // 'profile',
+  //     ],
+  //   );
+  //   try {
+  //     // Step 1: Start Google Sign-In
+  //     final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+  //     if (googleUser == null) {
+  //       throw Exception("Google Sign-In was canceled by the user.");
+  //     }
 
-      // Step 2: Retrieve Google authentication details
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+  //     // Step 2: Retrieve Google authentication details
+  //     final GoogleSignInAuthentication googleAuth =
+  //         await googleUser.authentication;
 
-      final idToken = googleAuth.idToken;
-      final accessToken = googleAuth.accessToken;
+  //     final idToken = googleAuth.idToken;
+  //     final accessToken = googleAuth.accessToken;
 
-      if (idToken == null || accessToken == null) {
-        throw Exception("Failed to retrieve Google Sign-In tokens.");
-      }
+  //     if (idToken == null || accessToken == null) {
+  //       throw Exception("Failed to retrieve Google Sign-In tokens.");
+  //     }
 
-      // Step 3: Send tokens to your backend for verification or login
-      final response = await _dio.post(
-        "/auth/google/android/login",
-        data: {
-          "id_token": idToken,
-          "access_token": accessToken,
-        },
-      );
+  //     // Step 3: Send tokens to your backend for verification or login
+  //     final response = await _dio.post(
+  //       "/auth/google/android/login",
+  //       data: {
+  //         "id_token": idToken,
+  //         "access_token": accessToken,
+  //       },
+  //     );
 
-      // Step 4: Store tokens from your backend response
-      final responseData = response.data;
-      if (responseData != null && responseData['access_token'] != null) {
-        await storageService.storeToken(
-          accessToken: responseData['access_token'],
-          refreshToken: responseData['refresh_token'],
-        );
-        print("Google Sign-In successful. Tokens stored securely.");
-      } else {
-        throw Exception("Failed to authenticate with the backend.");
-      }
-    } catch (e) {
-      print("Google Sign-In failed: $e");
-      throw Exception("Google Sign-In failed: $e");
-    }
-  }
+  //     // Step 4: Store tokens from your backend response
+  //     final responseData = response.data;
+  //     if (responseData != null && responseData['access_token'] != null) {
+  //       await storageService.storeToken(
+  //         accessToken: responseData['access_token'],
+  //         refreshToken: responseData['refresh_token'],
+  //       );
+  //       print("Google Sign-In successful. Tokens stored securely.");
+  //     } else {
+  //       throw Exception("Failed to authenticate with the backend.");
+  //     }
+  //   } catch (e) {
+  //     print("Google Sign-In failed: $e");
+  //     throw ErrorHandler.mapErrorToMessage(e);
+  //   }
+  // }
 
   @override
   Future<void> forgotPassword(ForgotPasswordParams param) async {
@@ -203,14 +208,7 @@ class AuthServicesImpl implements AuthServices {
       final getToken = await storageService.getResetToken();
       print("Reset Token is :$getToken");
     } catch (e) {
-      if (e is DioException) {
-        print('DioException: ${e.message}');
-        if (e.response != null) {
-          print('Error response: ${e.response?.data}');
-        }
-      } else {
-        print('Unexpected error: $e');
-      }
+      throw ErrorHandler.mapErrorToMessage(e);
     }
   }
 
@@ -229,14 +227,7 @@ class AuthServicesImpl implements AuthServices {
 
       print('Verification successful: ${response.data["message"]}');
     } catch (e) {
-      if (e is DioException) {
-        print('DioException: ${e.message}');
-        if (e.response != null) {
-          print('Error response: ${e.response?.data}');
-        }
-      } else {
-        print('Unexpected error: $e');
-      }
+      throw ErrorHandler.mapErrorToMessage(e);
     }
   }
 
@@ -263,7 +254,7 @@ class AuthServicesImpl implements AuthServices {
       return getAccessToken!;
     } catch (e) {
       print(e);
-      throw Exception("Failed to refresh token: ${e.toString()}");
+      throw ErrorHandler.mapErrorToMessage(e);
     }
   }
 
@@ -287,7 +278,7 @@ class AuthServicesImpl implements AuthServices {
       print("Access Token after newPassword is  :$getToken");
     } catch (e) {
       print(e);
-      throw Exception(e.toString());
+      throw ErrorHandler.mapErrorToMessage(e);
     }
   }
 
@@ -304,6 +295,7 @@ class AuthServicesImpl implements AuthServices {
       print("Successfully Signed out: true");
     } catch (e) {
       print(e.toString());
+      throw ErrorHandler.mapErrorToMessage(e);
     }
   }
 
@@ -318,14 +310,7 @@ class AuthServicesImpl implements AuthServices {
           });
       print('Verification email resent: ${response.data}');
     } catch (e) {
-      if (e is DioException) {
-        print('DioException: ${e.message}');
-        if (e.response != null) {
-          print('Error response: ${e.response?.data}');
-        }
-      } else {
-        print('Unexpected error: $e');
-      }
+      throw ErrorHandler.mapErrorToMessage(e);
     }
   }
 
@@ -337,6 +322,7 @@ class AuthServicesImpl implements AuthServices {
 //     ],
 //   );
 
+//   @override
 //   Future<void> signinGoogle() async {
 //     try {
 //       print("Started Google Sign-In");
@@ -430,63 +416,106 @@ class AuthServicesImpl implements AuthServices {
 //     }
 //   }
 
-//   // Future<void> signinGoogle() async {
-//   //   try {
-//   //     print("started google");
+  // @override
+  // Future<void> signinGoogle() async {
+  //   try {
+  //     print("started google");
 
-//   //     final response = await _dio.get("/auth/google/android/login");
-//   //     if (response.data.toString().contains('<!doctype html')) {
-//   //       final loginUrl = response.realUri;
-//   //       print('Redirecting to Google Sign-In-Url: $loginUrl');
-//   //       if (await canLaunchUrl(loginUrl)) {
-//   //         await launchUrl(loginUrl);
-//   //       } else {
-//   //         throw Exception('Could not launch Google Sign-In URL');
-//   //       }
-//   //     } else {
-//   //       final responseData = jsonDecode(response.data);
-//   //       print(responseData);
-//   //       print("Google Sign-In initiated: ${response.data}");
-//   //     }
-//   //   } catch (e) {
-//   //     if (e is DioException) {
-//   //       print('DioException: ${e.message}');
-//   //       if (e.response != null) {
-//   //         print('Error response: ${e.response?.data}');
-//   //         throw Exception(
-//   //             'Google Sign-In failed: ${e.response?.data['message']}');
-//   //       }
-//   //       throw Exception('Google Sign-In failed: ${e.message}');
-//   //     } else {
-//   //       print('Unexpected error: $e');
-//   //       throw Exception('Unexpected error: $e');
-//   //     }
-//   //   }
-//   // }
+  //     final response = await _dio.get("/auth/google/android/login",
+  //         queryParameters: {"prompt": "select_account"});
+  //     if (response.data.toString().contains('<!doctype html')) {
+  //       final loginUrl = response.realUri;
+  //       print('Redirecting to Google Sign-In-Url: $loginUrl');
+  //       if (await canLaunchUrl(loginUrl)) {
+  //         await launchUrl(loginUrl, mode: LaunchMode.inAppWebView);
+  //       } else {
+  //         throw Exception('Could not launch Google Sign-In URL');
+  //       }
+  //     } else {
+  //       final responseData = jsonDecode(response.data);
+  //       print(responseData);
+  //       print("Google Sign-In initiated: ${response.data}");
+  //     }
+  //   } catch (e) {
+  //     if (e is DioException) {
+  //       print('DioException: ${e.message}');
+  //       if (e.response != null) {
+  //         print('Error response: ${e.response?.data}');
+  //         throw Exception(
+  //             'Google Sign-In failed: ${e.response?.data['message']}');
+  //       }
+  //       throw Exception('Google Sign-In failed: ${e.message}');
+  //     } else {
+  //       print('Unexpected error: $e');
+  //       throw Exception('Unexpected error: $e');
+  //     }
+  //   }
+  // }
 
-//   //
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email'],
+  );
 
-//   // Future<void> handleGoogleRedirect() async {
-//   //   try {
-//   //     final response = await _dio.get("/auth/google/android/redirect");
-//   //     final data = response.data;
-//   //     await storageService.storeToken(
-//   //         accessToken: data['access_token'],
-//   //         refreshToken: data['refresh_token']);
-//   //     print("Google Sign-Up successful: $data");
-//   //   } catch (e) {
-//   //     if (e is DioException) {
-//   //       print('DioException: ${e.message}');
-//   //       if (e.response != null) {
-//   //         print('Error response: ${e.response?.data}');
-//   //         throw Exception(
-//   //             'Google Sign-Up failed: ${e.response?.data['message']}');
-//   //       }
-//   //       throw Exception('Google Sign-Up failed: ${e.message}');
-//   //     } else {
-//   //       print('Unexpected error: $e');
-//   //       throw Exception('Unexpected error: $e');
-//   //     }
-//   //   }
-//   // }
+  @override
+  Future<void> signinGoogle() async {
+    try {
+      print("Started Google Sign-In");
+
+      // Start Google Sign-In flow
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        print("Google Sign-In canceled by user");
+        return; // User canceled sign-in
+      }
+
+      // Get authentication tokens
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final idToken = googleAuth.idToken;
+      final accessToken = googleAuth.accessToken;
+
+      if (idToken == null || accessToken == null) {
+        throw Exception("Google Sign-In failed: No ID token or access token.");
+      }
+
+      print("Google Sign-In successful");
+      print("ID Token: $idToken");
+      print("Access Token: $accessToken");
+
+      // Send the tokens to your backend via a GET request
+      final response = await _dio.get(
+        "/auth/google/android/login",
+        queryParameters: {
+          "id_token": idToken,
+          "access_token": accessToken,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print("Backend Authentication Success: ${response.data}");
+      } else {
+        throw Exception("Backend authentication failed");
+      }
+    } catch (e) {
+      print("Google Sign-In Error: $e");
+      throw Exception("Google Sign-In failed: $e");
+    }
+  }
+
+  Future<void> handleGoogleRedirect() async {
+    try {
+      final response = await _dio.get("/auth/google/android/redirect");
+      final data = response.data;
+      await storageService.storeToken(
+          accessToken: data['access_token'],
+          refreshToken: data['refresh_token']);
+      print("Google Sign-Up successful: $data");
+    } catch (e) {
+      if (e is DioException) {
+        print('DioException: ${e.message}');
+        throw ErrorHandler.mapErrorToMessage(e);
+      }
+    }
+  }
 }

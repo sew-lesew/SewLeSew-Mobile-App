@@ -3,13 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sewlesew_fund/config/routes/routes.dart';
+import 'package:sewlesew_fund/features/auth/presentation/widgets/flutter_toast.dart';
 
 import '../../../../config/theme/colors.dart';
-import '../../../../core/constants/constant.dart';
 import '../../../../core/resources/shared_event.dart';
 import '../../../../core/util/sign_in_controller.dart';
-import '../../../../injection_container.dart';
-import '../../data/services/local/storage_services.dart';
 import '../bloc/sign_in/sign_in_bloc.dart';
 import '../widgets/common_widgets.dart';
 import '../widgets/sign_up_widgets.dart';
@@ -57,8 +55,13 @@ class _SignInState extends State<SignIn> {
   }
 
   void _handleGoogleSignIn() {
-    sl<StorageService>().setBool(AppConstant.STORAGE_USER_TOKEN_KEY, true);
-    context.read<SignInBloc>().add(GoogleSignInEvent());
+    print("Start to Sign IN with Google");
+    try {
+      // sl<StorageService>().setBool(AppConstant.STORAGE_USER_TOKEN_KEY, true);
+      context.read<SignInBloc>().add(GoogleSignInEvent());
+    } catch (e) {
+      print("Error dispatching GoogleSignInEvent: $e");
+    }
   }
 
   @override
@@ -69,19 +72,16 @@ class _SignInState extends State<SignIn> {
       statusBarIconBrightness: Brightness.light, // Light text/icons
     ));
     return BlocListener<SignInBloc, SignInState>(listener: (context, state) {
-      if (state.signInSuccess || state.isGoogleSignInSuccess) {
+      if (state.signInSuccess) {
         print("Successfully Signed in: ${state.email}");
         // context.read<SignUpBloc>().add(SignUpLoadingEvent());
 
         Navigator.of(context).pushNamedAndRemoveUntil(
             AppRoutes.MAIN, (Route<dynamic> route) => false);
       }
-      // if (state.signInFailure != null || state.googleSignInFailure != null) {
-      //   print("Failed to Signed In");
-      //   // ScaffoldMessenger.of(context).showSnackBar(
-      //   //   SnackBar(content: Text(state.signInFailure!)),
-      //   // );
-      // }
+      if (state.signInFailure != null || state.signInFailure != "") {
+        // toastInfo(msg: state.signInFailure ?? state.googleSignInFailure);
+      }
     }, child: BlocBuilder<SignInBloc, SignInState>(
       builder: (context, state) {
         return SafeArea(
@@ -201,9 +201,61 @@ class _SignInState extends State<SignIn> {
                       child:
                           reusableText("Or use your google account to login"),
                     ),
-                    state.isGoogleSignInLoading
-                        ? const Center(child: CircularProgressIndicator())
-                        : buildThirdPartyLogin(context, _handleGoogleSignIn),
+                    BlocBuilder<SignInBloc, SignInState>(
+                      builder: (context, state) {
+                        if (state.isGoogleSignInLoading) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                        // if (state.googleSignInFailure != null ||
+                        //     state.googleSignInFailure!.isNotEmpty) {
+                        //   toastInfo(msg: state.googleSignInFailure);
+                        // }
+
+                        return GestureDetector(
+                          onTap: () {
+                            context.read<SignInBloc>().add(GoogleSignInEvent());
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                left: 25.w,
+                                right: 25.w,
+                                top: 10.h,
+                                bottom: 10.h),
+                            width: 325.w,
+                            height: 50.h,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15.w),
+                              border: Border.all(color: AppColors.cardColor),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle),
+                                  child: Image.asset(
+                                    "assets/icons/google.png",
+                                    // color: AppColors.primaryBackground,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 20.w,
+                                ), // Assuming this builds the Google icon
+
+                                Center(
+                                  child: Text(
+                                    "Continue with Google",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
