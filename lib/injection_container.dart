@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sewlesew_fund/features/auth/domain/usecases/forgot_password.dart';
+import 'package:sewlesew_fund/features/auth/domain/usecases/google_signin.dart';
 import 'package:sewlesew_fund/features/auth/domain/usecases/login.dart';
 import 'package:sewlesew_fund/features/auth/domain/usecases/logout.dart';
 import 'package:sewlesew_fund/features/auth/domain/usecases/refresh.dart';
@@ -38,6 +39,13 @@ import 'features/donations/data/repository/donation_repository_impl.dart';
 import 'features/donations/data/services/donation_services.dart';
 import 'features/donations/domain/usecases/get_donation_by_user.dart';
 import 'features/donations/presentation/bloc/donation_cubit.dart';
+import 'features/user_profile/data/repository/user_repository_impl.dart';
+import 'features/user_profile/data/services/user_services.dart';
+import 'features/user_profile/domain/repository/user_repository.dart';
+import 'features/user_profile/domain/usecase/deactivate_account.dart';
+import 'features/user_profile/domain/usecase/get_my_profile.dart';
+import 'features/user_profile/domain/usecase/update_profile.dart';
+import 'features/user_profile/presentation/bloc/profile_cubit.dart';
 
 final GetIt sl = GetIt.instance;
 Future<void> initializeDependencies() async {
@@ -49,12 +57,14 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl());
   sl.registerLazySingleton<CampaignRepository>(() => CampaignRepositoryImpl());
   sl.registerLazySingleton<DonationRepository>(() => DonationRepositoryImpl());
+  sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl());
 
   //services
   sl.registerLazySingleton<AuthServices>(() => AuthServicesImpl());
   sl.registerLazySingleton<TokenService>(() => TokenService());
   sl.registerLazySingleton<CampaignServices>(() => CampaignServices());
   sl.registerLazySingleton<DonationServices>(() => DonationServices());
+  sl.registerLazySingleton<UserServices>(() => UserServices());
 
 //Usecases
   //Auth Usecases
@@ -80,6 +90,12 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<GetDonationByCampaignUseCase>(
       GetDonationByCampaignUseCase());
   sl.registerSingleton<VerifyDonationUseCase>(VerifyDonationUseCase());
+  sl.registerSingleton<GoogleSigninUsecase>(GoogleSigninUsecase());
+
+  //User Profile Usecase
+  sl.registerSingleton<GetMyProfileUsecase>(GetMyProfileUsecase());
+  sl.registerSingleton<UpdateProfileUsecase>(UpdateProfileUsecase());
+  sl.registerSingleton<DeactivateAccountUsecase>(DeactivateAccountUsecase());
 
   // Blocs
   sl.registerFactory<SignInBloc>(() => SignInBloc());
@@ -90,4 +106,5 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<CampaignCubit>(() => CampaignCubit());
   sl.registerFactory<CreateCampaignBloc>(() => CreateCampaignBloc());
   sl.registerFactory<DonationCubit>(() => DonationCubit());
+  sl.registerFactory<ProfileCubit>(() => ProfileCubit());
 }
