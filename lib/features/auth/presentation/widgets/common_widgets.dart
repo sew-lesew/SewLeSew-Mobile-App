@@ -114,7 +114,7 @@ AppBar buildAppBarLarge(String type,
 
 //Need Context for accesssing Bloc
 Widget buildThirdPartyLogin(BuildContext context, void Function()? func) {
-  return GestureDetector(
+  return InkWell(
     onTap: func,
     child: Container(
       margin: EdgeInsets.only(left: 25.w, right: 25.w, top: 10.h, bottom: 10.h),
@@ -132,7 +132,7 @@ Widget buildThirdPartyLogin(BuildContext context, void Function()? func) {
                 color: Colors.white, shape: BoxShape.circle),
             child: Image.asset(
               "assets/icons/google.png",
-              //color: AppColors.primaryBackground,
+              // color: AppColors.primaryBackground,
             ),
           ),
           SizedBox(
