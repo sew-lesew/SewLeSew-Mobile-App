@@ -2,7 +2,10 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sewlesew_fund/core/constants/constant.dart';
+import 'package:sewlesew_fund/features/auth/data/services/local/storage_services.dart';
 import '../../../../config/theme/colors.dart';
+import '../../../../injection_container.dart';
 import '../bloc/welcome/welcome_bloc.dart';
 
 class Welcome extends StatefulWidget {
@@ -153,6 +156,11 @@ class _WelcomeState extends State<Welcome> {
                   // Navigate to sign-in or main page
                   Navigator.of(context)
                       .pushNamedAndRemoveUntil('/sign_in', (route) => false);
+
+                  // Set Get Device First Open to true
+                  AsyncSnapshot.waiting();
+                  sl<StorageService>().setBool(
+                      AppConstant.STORAGE_DEVICE_OPEN_FIRST_TIME, true);
                 }
               },
               child: Container(
