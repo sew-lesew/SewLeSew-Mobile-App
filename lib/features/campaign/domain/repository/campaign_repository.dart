@@ -8,6 +8,6 @@ abstract class CampaignRepository {
       {BusinessCampaignEntity entity, required String campaignType});
   Future<Either<Failure, Success>> getCampaigns(
       {String? category, String? name});
-  Future<Either<Failure, Success>> getMyCampaigns();
+  Future<Either<Failure, Success>> getMyCampaigns({String? campaignStatus});
   Future<Either<Failure, Success>> getCampaignById(String id);
 }
