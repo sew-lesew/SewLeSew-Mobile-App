@@ -1,6 +1,17 @@
+import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart'; // For image picking
 import 'package:sewlesew_fund/features/user_profile/presentation/widgets/dialog_box.dart';
+import 'package:sewlesew_fund/features/user_profile/domain/entities/profile_entity.dart';
+
 import '../../../../config/theme/colors.dart';
+import '../../../../core/resources/generic_state.dart';
+import '../../../../core/util/ethiopian_phone_validator.dart';
+import '../../../auth/presentation/widgets/flutter_toast.dart';
+import '../bloc/profile_cubit.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -11,12 +22,48 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   bool isPersonalDetailsExpanded = true;
+  late TextEditingController _firstNameController;
+  late TextEditingController _lastNameController;
+  late TextEditingController _emailController;
+  late TextEditingController _phoneNumberController;
+  File? _profilePicture;
+  DateTime? _dateOfBirth;
 
-  Widget buildProfileSection() {
+  @override
+  void initState() {
+    super.initState();
+    _firstNameController = TextEditingController();
+    _lastNameController = TextEditingController();
+    _emailController = TextEditingController();
+    _phoneNumberController = TextEditingController();
+
+    // Fetch profile data on initialization
+    context.read<ProfileCubit>().getMyProfile();
+  }
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    _phoneNumberController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _profilePicture = File(pickedFile.path);
+      });
+    }
+  }
+
+  Widget buildProfileSection(ProfileEntity? profile) {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        // color: Colors.white,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
@@ -33,17 +80,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           Center(
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 40,
-                  backgroundColor: AppColors.accentColor,
-                  child: Text(
-                    "K",
-                    style: TextStyle(fontSize: 24, color: Colors.white),
+                GestureDetector(
+                  onTap: _pickImage,
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundColor: profile?.profilePictueUrl == null
+                        ? AppColors.accentColor
+                        : null,
+                    backgroundImage: _profilePicture != null
+                        ? FileImage(_profilePicture!)
+                        : profile?.profilePictueUrl != null
+                            ? CachedNetworkImageProvider(
+                                profile!.profilePictueUrl!)
+                            : null,
+                    child: _profilePicture == null &&
+                            profile?.profilePictueUrl == null
+                        ? Text(
+                            profile?.firstName!.isNotEmpty == true
+                                ? profile!.firstName![0].toUpperCase()
+                                : '',
+                            style: TextStyle(fontSize: 24, color: Colors.white),
+                          )
+                        : null,
                   ),
                 ),
                 SizedBox(height: 8),
                 Text(
-                  "Kidan",
+                  profile?.firstName ?? '',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],
@@ -52,12 +115,199 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           SizedBox(height: 20),
 
           // Editable Fields
-          buildEditableField("Your Name", "Kidan"),
-          SizedBox(height: 16),
-          buildMobileNumberField(),
-          SizedBox(height: 16),
-          buildEditableField("Email Address", "kidumazie@gmail.com"),
+          buildEditableField(
+              label: "First Name", controller: _firstNameController),
+          SizedBox(height: 12.h),
+          buildEditableField(
+              label: "Last Name", controller: _lastNameController),
+          SizedBox(height: 12.h),
+          buildEditableField(
+              label: "Email Address", controller: _emailController),
+          SizedBox(height: 12.h),
+          buildEditableField(
+              label: "Phone Number",
+              controller: _phoneNumberController,
+              validator: (value) {
+                if (!EthiopianPhoneValidator.isValidPhoneNumber(value!)) {
+                  return "Please enter a valid phone number";
+                }
+
+                return null;
+              }),
+
+          SizedBox(height: 12.h),
+          buildDateOfBirthField(context)
         ],
+      ),
+    );
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _dateOfBirth ?? DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null && picked != _dateOfBirth) {
+      setState(() {
+        _dateOfBirth = picked;
+      });
+    }
+  }
+
+  Widget buildDateOfBirthField(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Date of Birth", style: TextStyle(color: Colors.grey)),
+        SizedBox(height: 4),
+        InkWell(
+          onTap: () => _selectDate(context),
+          child: InputDecorator(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  _dateOfBirth!.toIso8601String().split('T').first,
+                  style: TextStyle(fontSize: 16),
+                ),
+                Icon(Icons.calendar_today, color: AppColors.accentColor),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildEditableField(
+      {String? label,
+      TextEditingController? controller,
+      String? Function(String?)? validator}) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(label!, style: TextStyle(color: Colors.grey)),
+      SizedBox(height: 4),
+      TextFormField(
+        validator: validator,
+        controller: controller,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+      )
+    ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Edit Profile"),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: BlocConsumer<ProfileCubit, GenericState>(
+        listener: (context, state) {
+          // if (state.isSuccess!) {
+          //   toastInfo(msg: "Profile updated successfully");
+          // }
+          // if (state.failure != null) {
+          //   toastInfo(msg: state.failure!);
+          // }
+        },
+        builder: (context, state) {
+          if (state.isLoading!) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          final profile = state.data as ProfileEntity?;
+          if (profile != null) {
+            _firstNameController.text = profile.firstName!;
+            _lastNameController.text = profile.lastName!;
+            _emailController.text = profile.email!;
+            _phoneNumberController.text = profile.phoneNumber ?? '';
+            _dateOfBirth = profile.dateOfBirth;
+          }
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Expandable Sections
+                buildExpandableSection(
+                  icon: Icons.person,
+                  title: "Personal Details",
+                  isExpanded: isPersonalDetailsExpanded,
+                  onToggle: () {
+                    setState(() {
+                      isPersonalDetailsExpanded = !isPersonalDetailsExpanded;
+                    });
+                  },
+                ),
+
+                // Profile Section
+                if (isPersonalDetailsExpanded) buildProfileSection(profile),
+                buildSection(
+                  icon: Icons.info,
+                  title: "Other Details",
+                ),
+                buildSection(
+                  icon: Icons.person_outline,
+                  title: "Deactivate Account",
+                ),
+                buildSection(
+                  icon: Icons.logout,
+                  title: "Logout",
+                ),
+
+                SizedBox(height: 30),
+                // Save Changes Button
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final updatedProfile = ProfileEntity(
+                        // id: profile!.id,
+                        email: _emailController.text,
+                        firstName: _firstNameController.text,
+                        lastName: _lastNameController.text,
+                        profilePicture:
+                            _profilePicture ?? profile!.profilePicture,
+                        dateOfBirth: _dateOfBirth,
+                        phoneNumber: EthiopianPhoneValidator.normalize(
+                            _phoneNumberController.text),
+                      );
+                      // print all entity
+                      print(
+                          'Date of Birth:  ${updatedProfile.dateOfBirth}, ProfilePicture: ${updatedProfile.profilePicture}, PhoneNumber : ${updatedProfile.phoneNumber}, ${updatedProfile.email}, FirstName:  ${updatedProfile.firstName}, LastName: ${updatedProfile.lastName}');
+                      // print("Updated Profile: $updatedProfile"});
+                      context
+                          .read<ProfileCubit>()
+                          .updateProfile(updatedProfile);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey,
+                      minimumSize: Size(double.infinity, 50),
+                    ),
+                    child: Text(
+                      "Save Changes",
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -98,139 +348,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         onTap: () {
           showLogOutDialog(context);
         },
-      ),
-    );
-  }
-
-  Widget buildEditableField(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: TextStyle(color: Colors.grey)),
-        SizedBox(height: 4),
-        TextField(
-          decoration: InputDecoration(
-            hintText: value,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget buildMobileNumberField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Mobile Number", style: TextStyle(color: Colors.grey)),
-        SizedBox(height: 4),
-        Row(
-          children: [
-            Expanded(
-              flex: 2,
-              child: DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-                value: "+251",
-                items: ["+251", "+1", "+44", "+91"]
-                    .map((code) => DropdownMenuItem(
-                          value: code,
-                          child: Text(code),
-                        ))
-                    .toList(),
-                onChanged: (value) {
-                  // Handle country code change
-                },
-              ),
-            ),
-            SizedBox(width: 8),
-            Expanded(
-              flex: 5,
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "921889274",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-                keyboardType: TextInputType.phone,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      // backgroundColor: AppColors.primaryBackground,
-      appBar: AppBar(
-        title: Text("Edit Profile"),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Expandable Sections
-            buildExpandableSection(
-              icon: Icons.person,
-              title: "Personal Details",
-              isExpanded: isPersonalDetailsExpanded,
-              onToggle: () {
-                setState(() {
-                  isPersonalDetailsExpanded = !isPersonalDetailsExpanded;
-                });
-              },
-            ),
-
-            // Profile Section (now below Personal Details)
-            if (isPersonalDetailsExpanded) buildProfileSection(),
-
-            buildSection(
-              icon: Icons.info,
-              title: "Other Details",
-            ),
-            buildSection(
-              icon: Icons.person_outline,
-              title: "Deactivate Account",
-            ),
-            buildSection(
-              icon: Icons.logout,
-              title: "Logout",
-            ),
-
-            SizedBox(height: 30),
-
-            // Save Changes Button
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  // Save changes
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
-                  minimumSize: Size(double.infinity, 50),
-                ),
-                child: Text(
-                  "Save Changes",
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
