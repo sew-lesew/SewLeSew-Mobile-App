@@ -8,6 +8,7 @@ import 'package:sewlesew_fund/core/resources/success_failure.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/resources/generic_state.dart';
+import '../../../donations/presentation/pages/payment.dart';
 import '../../domain/entities/campaign_detail_entity.dart';
 import '../bloc/campaign_cubit.dart';
 
@@ -46,15 +47,15 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
               return const Center(child: CircularProgressIndicator());
             }
 
-            // if (state.failure != null) {
-            //   return Center(
-            //       child: Text("Error: ${dartz.Left(state.failure!)}"));
-            // }
+            if (state.failure != null) {
+              return Center(
+                  child: Text("Error: ${dartz.Left(state.failure!)}"));
+            }
 
             final data = state.data;
-            if (data == null || data.isLeft()) {
-              return const Center(child: Text("No campaigns found."));
-            }
+            // if (data == null || data.isLeft()) {
+            //   return const Center(child: Text("No campaigns found."));
+            // }
             final successData = (data as dartz.Right).value;
             final CampaignDetailEntity campaign =
                 successData.campaignDetailEntity;
@@ -64,22 +65,29 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
                 // Campaign Image
                 Stack(
                   children: [
+                    // make the campaign image as a list of images
                     SizedBox(
                       height: 250,
-                      child: CachedNetworkImage(
-                        imageUrl: campaign.campaignMedia[0].url,
-                        imageBuilder: (context, imageProvider) => Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                                colorFilter: ColorFilter.mode(
-                                    Colors.red, BlendMode.colorBurn)),
-                          ),
-                        ),
-                        placeholder: (context, url) =>
-                            CircularProgressIndicator(),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: campaign.campaignMedia.length,
+                        itemBuilder: (context, index) {
+                          return CachedNetworkImage(
+                            imageUrl: campaign.campaignMedia[index].url,
+                            imageBuilder: (context, imageProvider) => Container(
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            placeholder: (context, url) => Container(),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                          );
+                        },
                       ),
                     ),
                     Positioned(
@@ -171,7 +179,11 @@ class _CampaignDetailScreenState extends State<CampaignDetailScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: ElevatedButton(
                     onPressed: () {
-                      // Handle donation logic
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) =>
+                                  DonatePayment(campaignId: campaign.id)));
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 14),
