@@ -16,10 +16,10 @@ class SignInState {
   const SignInState({
     this.isSignInLoading = false,
     this.signInSuccess = false,
-    this.signInFailure = "",
+    this.signInFailure,
     this.isGoogleSignInLoading = false,
     this.isGoogleSignInSuccess = false,
-    this.googleSignInFailure = "",
+    this.googleSignInFailure,
     this.email = "",
     this.phoneNumber = "",
     this.password = "",
