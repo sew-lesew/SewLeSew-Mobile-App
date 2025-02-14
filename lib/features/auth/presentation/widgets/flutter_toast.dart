@@ -5,18 +5,18 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../../../config/theme/colors.dart';
 
 toastInfo({
-  required String msg,
-  Color backgroundColor = Colors.white,
-  Color textColor = AppColors.accentColor,
+  required String? msg,
+  Color backgroundColor = Colors.black,
+  Color textColor = AppColors.primaryBackground,
   ToastGravity gravity = ToastGravity.TOP,
 }) {
   return Fluttertoast.showToast(
-    msg: msg,
-    toastLength: Toast.LENGTH_SHORT,
+    msg: msg!,
+    toastLength: Toast.LENGTH_LONG,
     gravity: gravity,
-    timeInSecForIosWeb: 5,
+    timeInSecForIosWeb: 1,
     backgroundColor: backgroundColor,
     textColor: textColor,
-    fontSize: 16.sp,
+    fontSize: 12.sp,
   );
 }
