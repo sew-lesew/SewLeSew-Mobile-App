@@ -13,6 +13,7 @@ import 'package:sewlesew_fund/features/campaign/presentation/bloc/create_campaig
 import 'package:sewlesew_fund/features/donations/presentation/bloc/donation_cubit.dart';
 import 'package:sewlesew_fund/features/donations/presentation/pages/payment.dart';
 import 'package:sewlesew_fund/features/campaign/presentation/pages/campaign_detail.dart';
+import 'package:sewlesew_fund/features/explore/presentation/pages/home.dart';
 import 'package:sewlesew_fund/features/user_profile/presentation/pages/FAQ.dart';
 import 'package:sewlesew_fund/main.dart';
 
@@ -118,13 +119,14 @@ class AppPages {
         print(result.indexed);
         bool deviceFirstOpen = sl<StorageService>().getDeviceFirstOpen();
         if (result.first.route == AppRoutes.WELCOME && deviceFirstOpen) {
-          print("Second Log");
-          bool getIsLoggedIn = sl<StorageService>().getIsLoggedIn();
-          if (getIsLoggedIn) {
-            print("is logged in");
-            // return MaterialPageRoute(
-            //     builder: (_) => const MyHomePage(), settings: settings);
-          }
+          print('device first open');
+          // print("Second Log");
+          // bool getIsLoggedIn = sl<StorageService>().getIsLoggedIn();
+          // if (getIsLoggedIn) {
+          //   print("is logged in");
+          //   return MaterialPageRoute(
+          //       builder: (_) => const MyHomePage(), settings: settings);
+          // }
           return MaterialPageRoute(
               builder: (_) => const SignIn(), settings: settings);
         }
@@ -134,7 +136,7 @@ class AppPages {
     }
     print("Invalid route name: ${settings.name}");
     return MaterialPageRoute(
-        builder: (_) => const Welcome(), settings: settings);
+        builder: (_) => const SignIn(), settings: settings);
   }
 }
 
