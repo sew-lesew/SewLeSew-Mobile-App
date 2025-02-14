@@ -34,9 +34,9 @@ class _MyCampaignsTabState extends State<MyCampaignsTab> {
           return myCampaignCardSkeleton(context);
         }
 
-        if (state.failure != null) {
-          return Center(child: Text(state.failure!));
-        }
+        // if (state.failure != null) {
+        //   return Center(child: Text(state.failure!));
+        // }
 
         final data = state.data;
         if (data == null || data.isLeft()) {
@@ -124,21 +124,6 @@ class _MyCampaignsTabState extends State<MyCampaignsTab> {
                 ],
               ),
               const SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    onPressed: onEdit,
-                    icon: const Icon(Icons.edit, color: Colors.blue),
-                    tooltip: "Edit Campaign",
-                  ),
-                  IconButton(
-                    onPressed: onDelete,
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    tooltip: "Delete Campaign",
-                  ),
-                ],
-              ),
             ],
           ),
         ),
