@@ -12,10 +12,11 @@ class CampaignCubit extends Cubit<GenericState<Either<Failure, Success>>> {
   CampaignCubit()
       : super(GenericState<Either<Failure, Success>>(isLoading: false));
 
-  void getMyCampaigns() async {
+  void getMyCampaigns({String? camapignStatus}) async {
     emit(state.copyWith(isLoading: true));
 
-    final result = await sl<GetMyCampaignsUsecase>().call();
+    final result =
+        await sl<GetMyCampaignsUsecase>().call(params: camapignStatus);
 
     emit(state.copyWith(
       isLoading: false,
