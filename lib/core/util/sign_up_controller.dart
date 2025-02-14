@@ -41,7 +41,8 @@ class SignUpController {
         if (value.isEmpty) {
           return "Email or phone number can't be empty";
         }
-        if (!EthiopianPhoneValidator.isValidPhoneNumber(value) &&
+        if (!EthiopianPhoneValidator.isValidPhoneNumber(
+                EthiopianPhoneValidator.normalize(value)) &&
             !value.isEmail()) {
           return "Please enter a valid phone number or email address";
         }
