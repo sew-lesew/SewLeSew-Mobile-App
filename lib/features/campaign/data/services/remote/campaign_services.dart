@@ -103,7 +103,10 @@ class CampaignServices {
   }
 
   Future<Response> getCampaignById(String id) async {
-    return await _dio.get('/campaign/$id');
+    final Dio dio = Dio(BaseOptions(baseUrl: AppConstant.BASE_URL, headers: {
+      'Authorization': 'Bearer ${storageService.getAccessToken()}',
+    }));
+    return await dio.get('/campaign/$id');
   }
 
   Future<Response> getCampaigns(
@@ -116,6 +119,7 @@ class CampaignServices {
 
   Future<Response> getMyCampaign() async {
     print("Starting getting my campaigns");
+
     return await _dio.get('/campaign/me');
   }
 }
