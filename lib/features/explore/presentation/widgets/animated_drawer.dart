@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sewlesew_fund/config/theme/colors.dart';
@@ -8,6 +9,11 @@ import 'dart:math' as math;
 
 import 'package:sewlesew_fund/features/explore/presentation/pages/home.dart';
 import 'package:sewlesew_fund/features/explore/presentation/widgets/show_dialog.dart';
+import 'package:sewlesew_fund/features/user_profile/domain/entities/profile_entity.dart';
+import 'package:sewlesew_fund/features/user_profile/presentation/bloc/profile_cubit.dart';
+
+import '../../../../config/routes/names.dart';
+import 'profile_shimmer.dart';
 
 class CustomDrawer extends StatefulWidget {
   final Widget? child;
@@ -30,10 +36,13 @@ class CustomDrawerState extends State<CustomDrawer>
   @override
   void initState() {
     super.initState();
+    context.read<ProfileCubit>().getMyProfile();
+
     animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 450),
     );
+    // context.read<ProfileCubit>().getMyProfile();
   }
 
   void toggleDrawer() {
@@ -88,60 +97,76 @@ class CustomDrawerState extends State<CustomDrawer>
 
   Widget _buildDrawer() {
     return Material(
-      // color: AppColors.primaryBackground, // Matches app background color
+      color: Theme.of(context)
+          .scaffoldBackgroundColor, // Matches app background color
       child: Row(
         children: [
           Container(
             width: maxSlide, // Drawer width
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.accentColor,
-                  // Colors.white10,
-                  Color(0xFF4A4E69), // Light purplish gray
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 35,
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.person,
-                          size: 40, color: Color(0xFF4A4E69)),
-                    ),
-                    SizedBox(width: 15),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                BlocBuilder<ProfileCubit, GenericState>(
+                  builder: (context, state) {
+                    if (state.isLoading ?? false) {
+                      return ProfileShimmer();
+                    }
+                    if (state.failure != null) {
+                      print("Error: ${state.failure}");
+                    }
+                    final ProfileEntity profile = state.data;
+                    print(profile.profilePictueUrl);
+                    final url = profile.profilePictueUrl ??
+                        "https://www.example.com/default-avatar.png";
+                    final email = profile.email;
+                    return Row(
                       children: [
-                        Text(
-                          'Welcome, User!',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                        CircleAvatar(
+                          backgroundImage: CachedNetworkImageProvider(url),
+                          radius: 35,
+                          backgroundColor: Theme.of(context).primaryColor,
+                          child: Icon(Icons.person,
+                              size: 40, color: Color(0xFF4A4E69)),
                         ),
-                        SizedBox(height: 5),
-                        Text(
-                          'user@example.com',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white70,
-                          ),
+                        SizedBox(width: 15),
+                        BlocBuilder<ProfileCubit, GenericState>(
+                          builder: (context, state) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Welcome',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.color,
+                                  ),
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  email ?? "",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.color,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       ],
-                    ),
-                  ],
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
-                const Divider(color: Colors.white24),
+                Divider(color: Theme.of(context).dividerColor),
 
                 // Menu Options
                 Expanded(
@@ -150,7 +175,9 @@ class CustomDrawerState extends State<CustomDrawer>
                       _buildDrawerItem(
                         icon: Icons.home,
                         title: 'Home',
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).pushNamed(AppRoutes.MAIN);
+                        },
                       ),
                       _buildDrawerItem(
                         icon: Icons.explore,
@@ -160,7 +187,10 @@ class CustomDrawerState extends State<CustomDrawer>
                       _buildDrawerItem(
                         icon: Icons.settings,
                         title: 'Settings',
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushNamed(AppRoutes.EDIT_PROFILE);
+                        },
                       ),
                       _buildDrawerItem(
                         icon: Icons.support_agent,
@@ -168,7 +198,7 @@ class CustomDrawerState extends State<CustomDrawer>
                         onTap: () {},
                       ),
                       const SizedBox(height: 20),
-                      const Divider(color: Colors.white24),
+                      Divider(color: Theme.of(context).dividerColor),
                       BlocBuilder<SignOutCubit, GenericState>(
                           builder: (context, state) {
                         return _buildDrawerItem(
@@ -187,11 +217,11 @@ class CustomDrawerState extends State<CustomDrawer>
                 ),
 
                 // Footer
-                const Text(
+                Text(
                   'Version 1.0.0',
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.white38,
+                    color: Theme.of(context).textTheme.bodySmall?.color,
                   ),
                 ),
               ],
@@ -213,15 +243,16 @@ class CustomDrawerState extends State<CustomDrawer>
     required IconData icon,
     required String title,
     required VoidCallback onTap,
-    Color iconColor = Colors.white,
-    Color textColor = Colors.white,
+    Color? iconColor,
+    Color? textColor,
   }) {
     return ListTile(
-      leading: Icon(icon, color: iconColor),
+      leading:
+          Icon(icon, color: iconColor ?? Theme.of(context).iconTheme.color),
       title: Text(
         title,
         style: TextStyle(
-          color: textColor,
+          color: textColor ?? Theme.of(context).textTheme.bodyMedium?.color,
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
