@@ -3,13 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sewlesew_fund/config/routes/routes.dart';
-import 'package:sewlesew_fund/features/auth/presentation/widgets/flutter_toast.dart';
-
 import '../../../../config/theme/colors.dart';
+import '../../../../core/constants/constant.dart';
 import '../../../../core/resources/shared_event.dart';
 import '../../../../core/util/sign_in_controller.dart';
+import '../../../../injection_container.dart';
+import '../../data/services/local/storage_services.dart';
 import '../bloc/sign_in/sign_in_bloc.dart';
 import '../widgets/common_widgets.dart';
+import '../widgets/flutter_toast.dart';
 import '../widgets/sign_up_widgets.dart';
 
 class SignIn extends StatefulWidget {
@@ -54,16 +56,6 @@ class _SignInState extends State<SignIn> {
     }
   }
 
-  void _handleGoogleSignIn() {
-    print("Start to Sign IN with Google");
-    try {
-      // sl<StorageService>().setBool(AppConstant.STORAGE_USER_TOKEN_KEY, true);
-      context.read<SignInBloc>().add(GoogleSignInEvent());
-    } catch (e) {
-      print("Error dispatching GoogleSignInEvent: $e");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -75,12 +67,12 @@ class _SignInState extends State<SignIn> {
       if (state.signInSuccess) {
         print("Successfully Signed in: ${state.email}");
         // context.read<SignUpBloc>().add(SignUpLoadingEvent());
-
+        sl<StorageService>().setBool(AppConstant.STORAGE_USER_TOKEN_KEY, true);
         Navigator.of(context).pushNamedAndRemoveUntil(
             AppRoutes.MAIN, (Route<dynamic> route) => false);
       }
       if (state.signInFailure != null || state.signInFailure != "") {
-        // toastInfo(msg: state.signInFailure ?? state.googleSignInFailure);
+        toastInfo(msg: state.signInFailure);
       }
     }, child: BlocBuilder<SignInBloc, SignInState>(
       builder: (context, state) {
