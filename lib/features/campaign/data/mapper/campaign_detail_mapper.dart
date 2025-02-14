@@ -15,10 +15,10 @@ class CampaignDetailMapper {
       raisedAmount: model.raisedAmount,
       status: model.status,
       deadline: model.deadline,
-      createdAt: model.createdAt,
-      updatedAt: model.updatedAt,
+      // createdAt: model.createdAt,
+      // updatedAt: model.updatedAt,
       businessId: model.businessId,
-      charityId: model.charityId,
+      // charityId: model.charityId,
       business: model.business != null
           ? BusinessMapper.toEntity(model.business!)
           : null,
@@ -41,7 +41,7 @@ class CampaignDetailMapper {
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
       businessId: entity.businessId,
-      charityId: entity.charityId,
+      // charityId: entity.charityId,
       business: entity.business != null
           ? BusinessMapper.fromEntity(entity.business!)
           : null,
