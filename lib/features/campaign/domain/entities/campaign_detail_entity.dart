@@ -7,15 +7,15 @@ class CampaignDetailEntity extends Equatable {
   final String userId;
   final String title;
   final String description;
-  final double goalAmount;
+  final String goalAmount;
   final String category;
-  final double raisedAmount;
+  final String raisedAmount;
   final String status;
   final DateTime deadline;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   final String? businessId;
-  final String? charityId;
+  // final String? charityId;
   final BusinessEntity? business;
   final List<CampaignMediaEntity> campaignMedia;
 
@@ -29,10 +29,10 @@ class CampaignDetailEntity extends Equatable {
     required this.raisedAmount,
     required this.status,
     required this.deadline,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.businessId,
-    required this.charityId,
+    this.createdAt,
+    this.updatedAt,
+    this.businessId,
+    // required this.charityId,
     required this.business,
     required this.campaignMedia,
   });
@@ -51,7 +51,7 @@ class CampaignDetailEntity extends Equatable {
         createdAt,
         updatedAt,
         businessId,
-        charityId,
+        // charityId,
         business,
         campaignMedia,
       ];
