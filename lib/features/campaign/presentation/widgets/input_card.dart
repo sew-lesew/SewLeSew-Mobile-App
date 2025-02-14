@@ -19,44 +19,75 @@ class InputCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      margin: EdgeInsets.only(bottom: 16.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: Color(0xFF13ADB7)),
-                SizedBox(width: 8.0),
-                Text(
-                  label,
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF005782),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 8.0),
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: hint,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+    return Padding(
+      padding: const EdgeInsets.all(6.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Label with Icon
+          Row(
+            children: [
+              Icon(icon, color: const Color(0xFF13ADB7), size: 18),
+              const SizedBox(width: 8.0),
+              Text(
+                label,
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: const Color(0xFF005782),
                 ),
               ),
-              onSaved: onSaved,
-              validator: validator,
+            ],
+          ),
+          const SizedBox(height: 8.0),
+
+          // Text Field
+          TextFormField(
+            decoration: InputDecoration(
+              hintText: hint,
+              hintStyle: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Colors.grey.shade500,
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 12.0,
+                horizontal: 16.0,
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.grey.shade300,
+                  width: 1.5,
+                ),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: const Color(0xFF13ADB7),
+                  width: 2.0,
+                ),
+              ),
+              errorBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.red.shade400,
+                  width: 1.5,
+                ),
+              ),
+              focusedErrorBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.red.shade400,
+                  width: 2.0,
+                ),
+              ),
             ),
-          ],
-        ),
+            style: GoogleFonts.poppins(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF005782),
+            ),
+            onSaved: onSaved,
+            validator: validator,
+          ),
+        ],
       ),
     );
   }
