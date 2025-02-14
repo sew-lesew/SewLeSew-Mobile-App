@@ -5,7 +5,6 @@ import 'package:sewlesew_fund/config/routes/names.dart';
 import '../../../../config/theme/colors.dart';
 import '../bloc/verification/verification_bloc.dart';
 import '../widgets/build_pin_code_field.dart';
-import '../widgets/common_widgets.dart';
 
 class SignUpVerification extends StatefulWidget {
   const SignUpVerification(
@@ -20,95 +19,72 @@ class SignUpVerification extends StatefulWidget {
 }
 
 class _SignUpVerificationState extends State<SignUpVerification> {
-  final String? title = "Sign up Verification";
-
   final TextEditingController _pinCodeController = TextEditingController();
-  late VerificationBloc _verificationBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _verificationBloc = context.read<VerificationBloc>();
-  }
 
   @override
   Widget build(BuildContext context) {
-    print("the email that pass through this is ${widget.email}");
+    print("The email that passed through this is: ${widget.email}");
     return Scaffold(
-      appBar: buildAppBarLarge(title!),
+      appBar: AppBar(title: const Text("Sign Up Verification")),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(
-              height: 15,
+            const SizedBox(height: 15),
+            const Text(
+              "Please enter the 6-digit verification code sent to your email",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
             ),
-            reusableText(
-                "Please Enter the 6 digit \nverification code sent \nto your email"),
-            const SizedBox(
-              height: 35,
+            const SizedBox(height: 35),
+            BlocBuilder<VerificationBloc, VerificationState>(
+              builder: (context, state) {
+                if (state is VerificationSuccess) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    Navigator.of(context).pushNamed(AppRoutes.SIGN_IN);
+                  });
+                }
+                return PinCodeFieldWidget(controller: _pinCodeController);
+              },
             ),
-            Container(
-                padding: const EdgeInsets.all(20.0),
-                margin: const EdgeInsets.all(8.0),
-                child: BlocBuilder<VerificationBloc, VerificationState>(
-                  builder: (context, state) {
-                    // if (state is VerificationFailure) {
-                    //   return Center(
-                    //       child: Text('Error: ${state.error}',
-                    //           style: const TextStyle(color: Colors.red)));
-                    // }
-                    if (state is VerificationSuccess) {
-                      // Navigate to the next page after successful verification
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        Navigator.of(context).pushNamed(AppRoutes.SIGN_IN);
-                        return;
-                      });
-                    }
-                    return PinCodeFieldWidget(controller: _pinCodeController);
+            const SizedBox(height: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("Didn't receive the code?"),
+                GestureDetector(
+                  onTap: () {
+                    context.read<VerificationBloc>().add(
+                          ResendCode(
+                              email: widget.email,
+                              phoneNumber: widget.phoneNumber),
+                        );
                   },
-                )),
-            const SizedBox(
-              height: 15,
+                  child: const Text(
+                    'Resend Now',
+                    style:
+                        TextStyle(color: AppColors.accentColor, fontSize: 15),
+                  ),
+                ),
+              ],
             ),
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  reusableText("Didn't receive code?"),
-                  GestureDetector(
-                    child: const Center(
-                      child: Text(
-                        'Resend Now',
-                        style: TextStyle(
-                            color: AppColors.accentColor, fontSize: 15),
-                      ),
-                    ),
-                    onTap: () {
-                      _verificationBloc.add(ResendCode(
-                          email: widget.email,
-                          phoneNumber: widget.phoneNumber));
-                    },
-                  )
-                ],
-              ),
-            ),
+            const SizedBox(height: 20),
             BlocBuilder<VerificationBloc, VerificationState>(
               builder: (context, state) {
                 bool isButtonEnabled = state is VerificationCodeValid;
-                print(isButtonEnabled);
-                return state is VerificationLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : buildLogInAndRegButton(
-                        "Verify", state is VerificationCodeValid, () {
-                        if (state is VerificationCodeValid) {
+                return ElevatedButton(
+                  onPressed: isButtonEnabled
+                      ? () {
                           final code = _pinCodeController.text;
-
                           if (code.isNotEmpty && code.length == 6) {
-                            context.read<VerificationBloc>().add(SubmitCode(
-                                  code: int.parse(code),
-                                  email: widget.email,
-                                  phoneNumber: widget.phoneNumber,
-                                ));
+                            context.read<VerificationBloc>().add(
+                                  SubmitCode(
+                                    code: int.parse(code),
+                                    email: widget.email,
+                                    phoneNumber: widget.phoneNumber,
+                                  ),
+                                );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -119,9 +95,22 @@ class _SignUpVerificationState extends State<SignUpVerification> {
                             );
                           }
                         }
-                      });
+                      : null,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.accentColor,
+                    disabledBackgroundColor: Colors.grey,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 15),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                  ),
+                  child: state is VerificationLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text("Verify",
+                          style: TextStyle(fontSize: 16, color: Colors.white)),
+                );
               },
-            )
+            ),
           ],
         ),
       ),
