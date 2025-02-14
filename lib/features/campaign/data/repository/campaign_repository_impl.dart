@@ -102,20 +102,33 @@ class CampaignRepositoryImpl implements CampaignRepository {
   }
 
   @override
-  Future<Either<Failure, Success>> getMyCampaigns() async {
+  Future<Either<Failure, Success>> getMyCampaigns(
+      {String? campaignStatus}) async {
     try {
       print("Starting getting my campaigns");
       final response = await sl<CampaignServices>().getMyCampaign();
       print("response is $response");
       final data = response.data['data'];
       print("my campaigns are $data");
-      final List<CampaignModel> myCampaignModels = data
+
+      // Filter campaigns based on the provided status
+      List<dynamic> filteredData = data;
+      if (campaignStatus != null) {
+        filteredData = data
+            .where((campaign) => campaign['status'] == campaignStatus)
+            .toList();
+      }
+
+      final List<CampaignModel> myCampaignModels = filteredData
           .map<CampaignModel>((campaign) => CampaignModel.fromJson(campaign))
           .toList();
+
       final List<CampaignEntity> myCampaigns = myCampaignModels
           .map<CampaignEntity>((campaign) => CampaignMapper.toEntity(campaign))
           .toList();
+
       print("my campaigns : $myCampaigns");
+
       if (response.statusCode == 200) {
         return Right(
             Success(message: response.data['message'], campaigns: myCampaigns));
