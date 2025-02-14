@@ -416,90 +416,39 @@ class AuthServicesImpl implements AuthServices {
 //     }
 //   }
 
-  // @override
-  // Future<void> signinGoogle() async {
-  //   try {
-  //     print("started google");
-
-  //     final response = await _dio.get("/auth/google/android/login",
-  //         queryParameters: {"prompt": "select_account"});
-  //     if (response.data.toString().contains('<!doctype html')) {
-  //       final loginUrl = response.realUri;
-  //       print('Redirecting to Google Sign-In-Url: $loginUrl');
-  //       if (await canLaunchUrl(loginUrl)) {
-  //         await launchUrl(loginUrl, mode: LaunchMode.inAppWebView);
-  //       } else {
-  //         throw Exception('Could not launch Google Sign-In URL');
-  //       }
-  //     } else {
-  //       final responseData = jsonDecode(response.data);
-  //       print(responseData);
-  //       print("Google Sign-In initiated: ${response.data}");
-  //     }
-  //   } catch (e) {
-  //     if (e is DioException) {
-  //       print('DioException: ${e.message}');
-  //       if (e.response != null) {
-  //         print('Error response: ${e.response?.data}');
-  //         throw Exception(
-  //             'Google Sign-In failed: ${e.response?.data['message']}');
-  //       }
-  //       throw Exception('Google Sign-In failed: ${e.message}');
-  //     } else {
-  //       print('Unexpected error: $e');
-  //       throw Exception('Unexpected error: $e');
-  //     }
-  //   }
-  // }
-
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email'],
-  );
-
   @override
   Future<void> signinGoogle() async {
     try {
-      print("Started Google Sign-In");
+      print("started google");
 
-      // Start Google Sign-In flow
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        print("Google Sign-In canceled by user");
-        return; // User canceled sign-in
-      }
-
-      // Get authentication tokens
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      final idToken = googleAuth.idToken;
-      final accessToken = googleAuth.accessToken;
-
-      if (idToken == null || accessToken == null) {
-        throw Exception("Google Sign-In failed: No ID token or access token.");
-      }
-
-      print("Google Sign-In successful");
-      print("ID Token: $idToken");
-      print("Access Token: $accessToken");
-
-      // Send the tokens to your backend via a GET request
-      final response = await _dio.get(
-        "/auth/google/android/login",
-        queryParameters: {
-          "id_token": idToken,
-          "access_token": accessToken,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        print("Backend Authentication Success: ${response.data}");
+      final response = await _dio.get("/auth/google/android/login",
+          queryParameters: {"prompt": "select_account"});
+      if (response.data.toString().contains('<!doctype html')) {
+        final loginUrl = response.realUri;
+        print('Redirecting to Google Sign-In-Url: $loginUrl');
+        if (await canLaunchUrl(loginUrl)) {
+          await launchUrl(loginUrl, mode: LaunchMode.inAppWebView);
+        } else {
+          throw Exception('Could not launch Google Sign-In URL');
+        }
       } else {
-        throw Exception("Backend authentication failed");
+        final responseData = jsonDecode(response.data);
+        print(responseData);
+        print("Google Sign-In initiated: ${response.data}");
       }
     } catch (e) {
-      print("Google Sign-In Error: $e");
-      throw Exception("Google Sign-In failed: $e");
+      if (e is DioException) {
+        print('DioException: ${e.message}');
+        if (e.response != null) {
+          print('Error response: ${e.response?.data}');
+          throw Exception(
+              'Google Sign-In failed: ${e.response?.data['message']}');
+        }
+        throw Exception('Google Sign-In failed: ${e.message}');
+      } else {
+        print('Unexpected error: $e');
+        throw Exception('Unexpected error: $e');
+      }
     }
   }
 
