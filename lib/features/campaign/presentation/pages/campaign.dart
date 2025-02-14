@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:sewlesew_fund/features/campaign/presentation/pages/category_campaign.dart';
 
 import '../../../../config/theme/colors.dart';
+import 'closed_campaign.dart';
 import 'my_campaigns_tab.dart';
+import 'pending_campaign.dart';
 
 class Campaign extends StatelessWidget {
   const Campaign({super.key});
@@ -27,15 +29,15 @@ class Campaign extends StatelessWidget {
             Tab(text: "Create"),
             Tab(text: "My Campaigns"),
             Tab(text: "Pending"),
-            Tab(text: "Deleted"),
+            Tab(text: "Closed"),
           ],
         ),
         body: TabBarView(
           children: [
             CampaignCategory(),
             MyCampaignsTab(),
-            PendingCampaignsTab(),
-            DeletedCampaignsTab(),
+            PendingCampaign(),
+            ClosedCampaign(),
           ],
         ),
       ),
@@ -43,38 +45,38 @@ class Campaign extends StatelessWidget {
   }
 }
 
-class PendingCampaignsTab extends StatelessWidget {
-  const PendingCampaignsTab({super.key});
+// class PendingCampaignsTab extends StatelessWidget {
+//   const PendingCampaignsTab({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        "No Pending Campaigns Yet!",
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: Colors.grey.shade600,
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: Text(
+//         "No Pending Campaigns Yet!",
+//         style: TextStyle(
+//           fontSize: 16,
+//           fontWeight: FontWeight.w500,
+//           color: Colors.grey.shade600,
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-class DeletedCampaignsTab extends StatelessWidget {
-  const DeletedCampaignsTab({super.key});
+// class DeletedCampaignsTab extends StatelessWidget {
+//   const DeletedCampaignsTab({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        "No Deleted Campaigns Yet!",
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: Colors.grey.shade600,
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: Text(
+//         "No Deleted Campaigns Yet!",
+//         style: TextStyle(
+//           fontSize: 16,
+//           fontWeight: FontWeight.w500,
+//           color: Colors.grey.shade600,
+//         ),
+//       ),
+//     );
+//   }
+// }
