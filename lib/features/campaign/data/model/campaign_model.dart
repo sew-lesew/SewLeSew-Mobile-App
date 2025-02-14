@@ -10,7 +10,7 @@ class CampaignModel {
   final DateTime deadline;
   final String status;
   final List<CampaignMediaModel> campaignMedia;
-  final int donationCount;
+  final String donationCount;
 
   const CampaignModel({
     required this.id,
@@ -39,7 +39,9 @@ class CampaignModel {
           .map((e) => CampaignMediaModel.fromJson(e))
           .toList(),
       // How to handle IN _count object there is donation
-      donationCount: json['_count']['donation'],
+      // handle null is not a subtype of string
+// parse this to string
+      donationCount: json['_count']['Donation'].toString(),
     );
   }
 
